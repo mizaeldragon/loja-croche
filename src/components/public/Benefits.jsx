@@ -13,7 +13,7 @@ export default function Benefits() {
         <Reveal className="mx-auto mb-14 max-w-2xl text-center">
           <span className="eyebrow">Por que Angel Art</span>
           <h2 className="mt-3 text-balance font-display text-3xl leading-tight text-espresso-800 sm:text-4xl">
-            O que você sente quando a peça chega
+            O que você sente na peça
           </h2>
           <p className="mt-4 text-balance text-[0.95rem] leading-relaxed text-espresso-600/80">
             Mais do que crochê: capricho no acabamento, conversa próxima e o tempo certo de quem faz à mão.
