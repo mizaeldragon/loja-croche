@@ -12,9 +12,9 @@ export default function Categories() {
     <div id="categorias" className="py-20 sm:pb-10 sm:pt-24">
       <div className="container-page">
         <SectionHeading
-          eyebrow="Explore por categoria"
+          eyebrow="Coleções do ateliê"
           title="Uma peça para cada momento"
-          subtitle="Navegue pelas coleções do ateliê e encontre a peça perfeita para vestir, decorar ou presentear."
+          subtitle="Do enxoval ao presente, da mesa posta à lembrança especial — escolha o caminho e explore."
         />
         <Stagger className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
           {sorted.map((c) => (

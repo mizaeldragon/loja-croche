@@ -48,7 +48,7 @@ export default function Hero() {
             className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-espresso-700/8 pt-8"
           >
             <div className="flex items-center gap-2 text-sm text-espresso-500">
-              <ShieldCheck size={17} className="text-espresso-700" /> Peças 100% artesanais
+              <ShieldCheck size={17} className="text-espresso-700" /> Feito à mão, ponto a ponto
             </div>
             <div className="flex items-center gap-2 text-sm text-espresso-500">
               <Truck size={17} className="text-espresso-700" /> Envio para todo o Brasil

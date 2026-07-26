@@ -71,7 +71,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-espresso-700/8 py-6">
         <p className="container-page text-center text-xs text-espresso-500">
-          © {year} {settings.siteName}. Todos os direitos reservados. Feito à mão, com carinho.
+          © {year} {settings.siteName}. Feito à mão, ponto a ponto.
         </p>
       </div>
     </footer>

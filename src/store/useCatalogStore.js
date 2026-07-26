@@ -149,7 +149,7 @@ export const useCatalogStore = create(
     }),
     {
       name: 'atelie-linha-e-ponto:catalog',
-      version: 10,
+      version: 11,
       migrate: (persistedState, version) => {
         if (version < 9) {
           return {
@@ -157,6 +157,7 @@ export const useCatalogStore = create(
             categories: seedCategories,
             products: seedProducts,
             testimonials: seedTestimonials,
+            faqs: seedFaqs,
             banners: {
               ...seedBanners,
               ...(persistedState?.banners || {}),
@@ -174,6 +175,30 @@ export const useCatalogStore = create(
               aboutText: seedSettings.aboutText,
             },
             orders: seedOrders,
+          }
+        }
+        if (version < 11) {
+          return {
+            ...persistedState,
+            categories: seedCategories,
+            testimonials: seedTestimonials,
+            faqs: seedFaqs,
+            banners: {
+              ...seedBanners,
+              hero: {
+                ...seedBanners.hero,
+                image: persistedState?.banners?.hero?.image || seedBanners.hero.image,
+              },
+            },
+            settings: {
+              ...persistedState?.settings,
+              ...seedSettings,
+              email: persistedState?.settings?.email || seedSettings.email,
+              phone: persistedState?.settings?.phone || seedSettings.phone,
+              whatsapp: persistedState?.settings?.whatsapp || seedSettings.whatsapp,
+              instagram: persistedState?.settings?.instagram || seedSettings.instagram,
+              address: persistedState?.settings?.address || seedSettings.address,
+            },
           }
         }
         return persistedState

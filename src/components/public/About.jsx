@@ -10,7 +10,7 @@ export default function About() {
       <div className="container-page grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
         <Reveal className="order-2 lg:order-1">
           <span className="eyebrow">
-            <Sparkles size={13} /> Sobre o ateliê
+            <Sparkles size={13} /> Nossa história
           </span>
           <h2 className="mt-3 text-balance font-display text-3xl leading-tight text-espresso-800 sm:text-4xl">
             {settings.aboutTitle}

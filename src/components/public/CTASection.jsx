@@ -59,7 +59,7 @@ export default function CTASection() {
 
         <Reveal variant="scale" delay={0.1}>
           <form onSubmit={submit} className="card-surface space-y-4 p-7 sm:p-8">
-            <h3 className="font-display text-lg text-espresso-800">Solicite um orçamento</h3>
+            <h3 className="font-display text-lg text-espresso-800">Conte sua ideia</h3>
             <TextField
               label="Seu nome"
               placeholder="Como podemos te chamar?"
@@ -75,15 +75,15 @@ export default function CTASection() {
               required
             />
             <TextAreaField
-              label="Conte sua ideia"
-              placeholder="Ex: gostaria de um cardigan personalizado na cor terracota, tamanho M..."
+              label="O que você imagina?"
+              placeholder="Ex.: kit higiene em sage e bege, ou um porta-joia rosa para presente..."
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
             />
             <button type="submit" disabled={sending} className="btn-primary btn-md w-full">
               {sending ? 'Enviando...' : <>Enviar solicitação <Send size={15} /></>}
             </button>
-            <p className="text-center text-xs text-espresso-400">Retornamos o contato em até 24h úteis.</p>
+            <p className="text-center text-xs text-espresso-400">Respondemos em até 1 dia útil.</p>
           </form>
         </Reveal>
       </div>

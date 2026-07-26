@@ -63,10 +63,10 @@ export default function Shop() {
     <section className="bg-white py-14 sm:py-16">
       <div className="container-page">
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <span className="eyebrow">Loja completa</span>
-          <h1 className="mt-3 font-display text-3xl text-espresso-800 sm:text-4xl">Nossa coleção artesanal</h1>
+          <span className="eyebrow">Loja do ateliê</span>
+          <h1 className="mt-3 font-display text-3xl text-espresso-800 sm:text-4xl">Toda a coleção artesanal</h1>
           <p className="mt-3 text-sm text-espresso-500 sm:text-base">
-            Encontre a peça perfeita entre roupas, acessórios, decoração e presentes feitos à mão.
+            Decoração, enxovais, presentes e personalizados — escolha a peça (ou peça a sua).
           </p>
         </div>
 

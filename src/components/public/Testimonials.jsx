@@ -10,9 +10,9 @@ export default function Testimonials() {
     <section id="depoimentos" className="bg-sand-50/60 py-20 sm:py-24">
       <div className="container-page">
         <SectionHeading
-          eyebrow="Quem já vestiu, aprovou"
-          title="Histórias de quem confia no ateliê"
-          subtitle="A satisfação de cada cliente é o que move cada ponto do nosso trabalho."
+          eyebrow="Depoimentos"
+          title="Quem já levou uma peça para casa"
+          subtitle="Histórias reais de clientes que confiaram no ateliê — e voltaram."
         />
         <Stagger className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.slice(0, 6).map((t) => (

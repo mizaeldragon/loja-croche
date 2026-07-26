@@ -14,9 +14,9 @@ export default function Highlights() {
     <section className="bg-white py-20 sm:py-24" id="destaques">
       <div className="container-page">
         <SectionHeading
-          eyebrow="Seleção especial"
-          title="Peças em destaque"
-          subtitle="Uma curadoria das criações mais amadas do ateliê — exclusivas, delicadas e feitas para durar."
+          eyebrow="Seleção do ateliê"
+          title="Peças que as clientes mais pedem"
+          subtitle="Uma curadoria das criações queridinhas — delicadas, exclusivas e feitas para durar no dia a dia."
         />
         {featured.length === 0 ? (
           <EmptyState
@@ -33,7 +33,7 @@ export default function Highlights() {
         )}
         <Reveal className="mt-12 text-center" delay={0.15}>
           <Link to="/loja" className="btn-secondary btn-md bg-white hover:bg-white">
-            Ver coleção completa <ArrowRight size={16} />
+            Ver toda a coleção <ArrowRight size={16} />
           </Link>
         </Reveal>
       </div>

@@ -11,12 +11,12 @@ export default function Benefits() {
     <section className="bg-white py-20 text-espresso-700 sm:py-24">
       <div className="container-page">
         <Reveal className="mx-auto mb-14 max-w-2xl text-center">
-          <span className="eyebrow">Por que escolher o ateliê</span>
+          <span className="eyebrow">Por que Angel Art</span>
           <h2 className="mt-3 text-balance font-display text-3xl leading-tight text-espresso-800 sm:text-4xl">
-            Diferenciais que você sente ao tocar
+            O que você sente quando a peça chega
           </h2>
           <p className="mt-4 text-balance text-[0.95rem] leading-relaxed text-espresso-600/80">
-            Cada detalhe é pensado para entregar mais do que uma peça — uma experiência de exclusividade e cuidado.
+            Mais do que crochê: capricho no acabamento, conversa próxima e o tempo certo de quem faz à mão.
           </p>
         </Reveal>
 

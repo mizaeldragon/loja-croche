@@ -15,8 +15,8 @@ export default function FAQSection() {
       <div className="container-page mx-auto max-w-3xl">
         <SectionHeading
           eyebrow="Dúvidas frequentes"
-          title="Perguntas que recebemos com frequência"
-          subtitle="Não encontrou o que procurava? Fale com a gente pelo WhatsApp ou formulário de contato."
+          title="Tudo o que costumam perguntar"
+          subtitle="Não achou sua resposta? Chame no WhatsApp ou envie uma mensagem — a gente responde com carinho."
         />
         <Stagger className="space-y-3">
           {faqs.map((f) => {
