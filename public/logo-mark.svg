@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Linha & Ponto">
+  <rect width="64" height="64" rx="18" fill="#F5EEE1"/>
+  <!-- yarn ball -->
+  <circle cx="30" cy="34" r="16" fill="#E4D4B8"/>
+  <path d="M18 28c4 1 8-1 12 1s7 2 12-1" stroke="#A2573A" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M17 34c5 1.5 9-1 13 1s8 2 14-1" stroke="#A2573A" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M19 40c4 .8 8-1 12 .8s8 1.5 12-.5" stroke="#A2573A" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M22 23c2.5 5 2 11 0 17M30 21c1.5 5.5 1.2 12 0 19M38 23c-1.8 5-1.5 11 0 16" stroke="#C89B6B" stroke-width="1.2" stroke-linecap="round" opacity=".85"/>
+  <!-- crochet hook -->
+  <path d="M42 12l8 8-22 22-4-4 18-26z" fill="#3D2B20"/>
+  <path d="M50 20c2.8-2.8 5.2-2.2 6.5-.8 1.4 1.4 1.8 3.8-.8 6.5" stroke="#B99655" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+  <circle cx="48.5" cy="18.5" r="1.6" fill="#B99655"/>
+</svg>
