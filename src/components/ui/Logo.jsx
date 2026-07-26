@@ -1,21 +1,31 @@
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
 
+const LOGO_SRC = '/logo.png?v=11'
+
 function Mark({ className }) {
   return (
-    <img
-      src="/logo.png"
-      alt=""
-      className={clsx('shrink-0 object-cover', className)}
-      draggable={false}
-    />
+    <span
+      className={clsx(
+        'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-espresso-800 bg-cream-50 shadow-soft',
+        className
+      )}
+    >
+      <img
+        src={LOGO_SRC}
+        alt=""
+        className="h-full w-full object-contain"
+        draggable={false}
+      />
+    </span>
   )
 }
 
 /**
  * Logo Ateliê Angel Art Crochê
  * @param {'full'|'mark'} variant
- * @param {'light'|'dark'} tone — light = fundo claro; dark = fundo escuro (footer/admin)
+ * @param {'light'|'dark'} tone — light = fundo claro; dark = fundo escuro
+ * @param {boolean} showText — texto ao lado (a arte já traz o nome; use false para só o selo)
  */
 export default function Logo({
   variant = 'full',
@@ -25,18 +35,14 @@ export default function Logo({
   to,
   className,
   markClassName,
+  showText = false,
 }) {
   const isDark = tone === 'dark'
 
   const content = (
     <>
-      <Mark
-        className={clsx(
-          'h-11 w-11 rounded-full bg-cream-50 shadow-soft ring-1 ring-espresso-700/10',
-          markClassName
-        )}
-      />
-      {variant === 'full' && (
+      <Mark className={clsx('h-12 w-12', markClassName)} />
+      {variant === 'full' && showText && (
         <span className="min-w-0 leading-tight">
           <span
             className={clsx(

@@ -15,7 +15,7 @@ export default function ConfirmDialog({
       <div className="flex flex-col items-center text-center">
         <div
           className={`mb-4 flex h-14 w-14 items-center justify-center rounded-full ${
-            danger ? 'bg-terracotta-600/10 text-terracotta-600' : 'bg-caramel-400/10 text-caramel-500'
+            danger ? 'bg-terracotta-600/10 text-terracotta-600' : 'bg-terracotta-400/10 text-terracotta-500'
           }`}
         >
           <TriangleAlert size={26} />

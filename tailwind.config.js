@@ -22,7 +22,7 @@ export default {
           300: '#CCAFA1',
           400: '#B89788',
         },
-        // #A35825 — marrom cobre (ações secundárias / suporte)
+        // #A35825 — reservado (não usar em texto)
         caramel: {
           300: '#D49262',
           400: '#C0743D',
@@ -31,6 +31,7 @@ export default {
         },
         // #E75482 — rosa destaque
         terracotta: {
+          300: '#F4A0BB',
           400: '#F0789E',
           500: '#E75482',
           600: '#D13D6C',
@@ -41,21 +42,23 @@ export default {
           400: '#E75482',
           500: '#C93E6A',
         },
-        // Escala a partir do #A35825 (sem #6E3A18 — fundos escuros viraram branco)
+        // Textos e UI — preto / cinza escuro (sem marrom)
         espresso: {
-          400: '#CCAFA1',
-          500: '#B87A52',
-          600: '#A35825',
-          700: '#8B4A1F',
-          800: '#8A4A1F',
-          900: '#4A2710',
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9CA3AF',
+          500: '#6B7280',
+          600: '#4B5563',
+          700: '#1F2937',
+          800: '#111827',
+          900: '#0A0A0A',
         },
       },
       boxShadow: {
-        soft: '0 2px 8px 0 rgb(163 88 37 / 0.08)',
-        card: '0 4px 20px -4px rgb(163 88 37 / 0.12)',
-        lift: '0 12px 32px -8px rgb(163 88 37 / 0.18)',
-        inset: 'inset 0 1px 2px 0 rgb(163 88 37 / 0.06)',
+        soft: '0 2px 8px 0 rgb(17 24 39 / 0.06)',
+        card: '0 4px 20px -4px rgb(17 24 39 / 0.10)',
+        lift: '0 12px 32px -8px rgb(17 24 39 / 0.14)',
+        inset: 'inset 0 1px 2px 0 rgb(17 24 39 / 0.05)',
       },
       borderRadius: {
         xl2: '1.25rem',

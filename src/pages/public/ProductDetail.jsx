@@ -29,17 +29,19 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="container-page py-24">
-        <EmptyState
-          icon={PackageX}
-          title="Produto não encontrado"
-          description="Essa peça pode ter sido removida ou o link está incorreto."
-          action={
-            <Link to="/loja" className="btn-primary btn-sm">
-              Voltar para a loja
-            </Link>
-          }
-        />
+      <div className="bg-white py-24">
+        <div className="container-page">
+          <EmptyState
+            icon={PackageX}
+            title="Produto não encontrado"
+            description="Essa peça pode ter sido removida ou o link está incorreto."
+            action={
+              <Link to="/loja" className="btn-primary btn-sm">
+                Voltar para a loja
+              </Link>
+            }
+          />
+        </div>
       </div>
     )
   }
@@ -54,7 +56,7 @@ export default function ProductDetail() {
   )
 
   return (
-    <div className="py-10 sm:py-14">
+    <div className="bg-white py-10 sm:py-14">
       <div className="container-page">
         <button
           onClick={() => navigate(-1)}
@@ -79,7 +81,7 @@ export default function ProductDetail() {
                     key={i}
                     onClick={() => setActiveImage(i)}
                     className={`h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-colors ${
-                      activeImage === i ? 'border-caramel-500' : 'border-transparent'
+                      activeImage === i ? 'border-terracotta-500' : 'border-transparent'
                     }`}
                   >
                     <img src={img} alt="" className="h-full w-full object-cover" />
@@ -115,7 +117,7 @@ export default function ProductDetail() {
                       key={c}
                       onClick={() => setColor(c)}
                       className={`chip transition-colors ${
-                        color === c ? '!border-caramel-500 !bg-caramel-400/15 !text-espresso-800' : ''
+                        color === c ? '!border-terracotta-500 !bg-terracotta-400/15 !text-espresso-800' : ''
                       }`}
                     >
                       {color === c && <Check size={12} />} {c}
@@ -135,7 +137,7 @@ export default function ProductDetail() {
                       onClick={() => setSize(s)}
                       className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-xl border px-3 text-sm font-medium transition-colors ${
                         size === s
-                          ? 'border-caramel-500 bg-caramel-400/15 text-espresso-800'
+                          ? 'border-terracotta-500 bg-terracotta-400/15 text-espresso-800'
                           : 'border-espresso-700/12 text-espresso-600 hover:border-espresso-700/30'
                       }`}
                     >
@@ -162,13 +164,13 @@ export default function ProductDetail() {
 
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-espresso-700/8 pt-6">
               <div className="flex items-center gap-2 text-sm text-espresso-500">
-                <ShieldCheck size={16} className="text-caramel-500" /> Feito à mão sob encomenda
+                <ShieldCheck size={16} className="text-espresso-700" /> Feito à mão sob encomenda
               </div>
               <div className="flex items-center gap-2 text-sm text-espresso-500">
-                <Truck size={16} className="text-caramel-500" /> Envio cuidadoso
+                <Truck size={16} className="text-espresso-700" /> Envio cuidadoso
               </div>
               <div className="flex items-center gap-2 text-sm text-espresso-500">
-                <Sparkles size={16} className="text-caramel-500" /> Peça exclusiva
+                <Sparkles size={16} className="text-espresso-700" /> Peça exclusiva
               </div>
             </div>
           </div>

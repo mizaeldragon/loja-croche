@@ -36,7 +36,7 @@ export default function Pagination({ page, totalPages, onChange, totalItems, pag
               key={p}
               onClick={() => onChange(p)}
               className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-semibold transition-colors ${
-                p === page ? 'bg-espresso-700 text-cream-50' : 'text-espresso-600 hover:bg-sand-100'
+                p === page ? 'bg-terracotta-500 text-cream-50' : 'text-espresso-600 hover:bg-sand-100'
               }`}
             >
               {p}

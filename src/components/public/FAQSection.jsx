@@ -25,7 +25,7 @@ export default function FAQSection() {
               <StaggerItem
                 key={f.id}
                 className={`overflow-hidden rounded-2xl border transition-colors ${
-                  isOpen ? 'border-caramel-300 bg-white' : 'border-espresso-700/8 bg-white/60'
+                  isOpen ? 'border-terracotta-400 bg-white' : 'border-espresso-700/8 bg-white/60'
                 }`}
               >
                 <button
@@ -36,7 +36,7 @@ export default function FAQSection() {
                   <span className="font-display text-base text-espresso-800">{f.question}</span>
                   <Plus
                     size={18}
-                    className={`shrink-0 text-caramel-500 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`}
+                    className={`shrink-0 text-terracotta-500 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`}
                   />
                 </button>
                 <AnimatePresence initial={false}>

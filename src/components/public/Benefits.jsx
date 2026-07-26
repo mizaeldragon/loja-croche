@@ -28,7 +28,7 @@ export default function Benefits() {
                 key={b.title}
                 className="rounded-3xl border border-espresso-700/8 bg-cream-50 p-7 transition-colors hover:bg-sand-50"
               >
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-terracotta-400 to-caramel-500 text-cream-50">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-terracotta-400 to-terracotta-600 text-cream-50">
                   <Icon size={22} strokeWidth={1.7} />
                 </div>
                 <h3 className="font-display text-lg text-espresso-800">{b.title}</h3>

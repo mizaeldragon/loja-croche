@@ -1,7 +1,7 @@
 const STYLES = {
   published: 'bg-emerald-700/10 text-emerald-800',
   draft: 'bg-espresso-700/8 text-espresso-500',
-  novo: 'bg-caramel-400/15 text-caramel-600',
+  novo: 'bg-terracotta-400/15 text-terracotta-600',
   em_andamento: 'bg-gold-400/15 text-gold-500',
   concluido: 'bg-emerald-700/10 text-emerald-800',
   cancelado: 'bg-terracotta-600/10 text-terracotta-600',

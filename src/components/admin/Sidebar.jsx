@@ -42,6 +42,7 @@ export default function Sidebar({ open, onClose }) {
             name={siteName}
             tagline="Painel Admin"
             tone="light"
+            markClassName="h-14 w-14"
           />
           <button onClick={onClose} className="text-espresso-500 lg:hidden" aria-label="Fechar menu">
             <X size={20} />
@@ -57,7 +58,7 @@ export default function Sidebar({ open, onClose }) {
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-gradient-to-r from-terracotta-500 to-caramel-500 text-cream-50 shadow-soft'
+                    ? 'bg-gradient-to-r from-terracotta-400 to-terracotta-600 text-cream-50 shadow-soft'
                     : 'text-espresso-600 hover:bg-sand-50 hover:text-espresso-800'
                 }`
               }

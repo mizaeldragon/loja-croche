@@ -61,7 +61,7 @@ export default function ImageUploader({ images = [], onChange, max = 6 }) {
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="flex aspect-square flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-espresso-700/15 text-espresso-400 transition-colors hover:border-caramel-400 hover:text-caramel-500"
+            className="flex aspect-square flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-espresso-700/15 text-espresso-400 transition-colors hover:border-terracotta-400 hover:text-terracotta-500"
           >
             <ImagePlus size={20} />
             <span className="text-[0.65rem] font-medium">Adicionar</span>

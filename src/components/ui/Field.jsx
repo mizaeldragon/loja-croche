@@ -44,7 +44,7 @@ export function ToggleField({ label, description, checked, onChange }) {
         type="button"
         onClick={() => onChange(!checked)}
         className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-          checked ? 'bg-caramel-500' : 'bg-espresso-700/15'
+          checked ? 'bg-terracotta-500' : 'bg-espresso-700/15'
         }`}
       >
         <span
@@ -71,7 +71,7 @@ export function TagInput({ label, hint, values = [], onChange, placeholder }) {
       {label && <label className="label-field">{label}</label>}
       <div className="input-field flex min-h-[44px] flex-wrap items-center gap-1.5 py-2">
         {values.map((v) => (
-          <span key={v} className="chip bg-caramel-400/10 text-espresso-700">
+          <span key={v} className="chip bg-terracotta-400/10 text-espresso-700">
             {v}
             <button type="button" onClick={() => remove(v)} className="text-espresso-400 hover:text-terracotta-600">
               ×

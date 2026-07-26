@@ -44,7 +44,7 @@ export default function Login() {
             name="Angel Art"
             tagline="Ateliê de Crochê"
             className="flex-col gap-3"
-            markClassName="h-16 w-16 shadow-soft"
+            markClassName="h-24 w-24"
           />
         </div>
 

@@ -16,7 +16,7 @@
     scroll-margin-top: 6rem;
   }
   ::selection {
-    @apply bg-caramel-300/50 text-espresso-800;
+    @apply bg-terracotta-300/40 text-espresso-800;
   }
 }
 
@@ -37,7 +37,7 @@
   .btn-sm { @apply px-4 py-2 text-xs; }
 
   .btn-primary {
-    @apply btn bg-espresso-700 text-cream-50 shadow-card hover:bg-espresso-900 hover:-translate-y-0.5 active:translate-y-0;
+    @apply btn bg-gradient-to-b from-terracotta-400 to-terracotta-600 text-cream-50 shadow-card hover:brightness-105 hover:-translate-y-0.5 active:translate-y-0;
   }
   .btn-secondary {
     @apply btn bg-transparent text-espresso-700 border border-espresso-700/25 hover:border-espresso-700/60 hover:bg-espresso-700/5;
@@ -57,7 +57,7 @@
   }
 
   .input-field {
-    @apply w-full rounded-xl border border-espresso-700/15 bg-white px-4 py-2.5 text-sm text-espresso-800 placeholder:text-espresso-400 shadow-inset transition-colors focus:border-caramel-400 focus:outline-none focus:ring-4 focus:ring-caramel-300/20;
+    @apply w-full rounded-xl border border-espresso-700/15 bg-white px-4 py-2.5 text-sm text-espresso-800 placeholder:text-espresso-400 shadow-inset transition-colors focus:border-terracotta-400 focus:outline-none focus:ring-4 focus:ring-terracotta-300/20;
   }
   .label-field {
     @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-espresso-500;

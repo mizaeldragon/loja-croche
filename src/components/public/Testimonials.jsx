@@ -17,7 +17,7 @@ export default function Testimonials() {
         <Stagger className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.slice(0, 6).map((t) => (
             <StaggerItem key={t.id} className="card-surface flex flex-col p-7">
-              <Quote size={28} className="mb-4 text-caramel-300" />
+              <Quote size={28} className="mb-4 text-terracotta-400" />
               <div className="mb-3 flex gap-0.5">
                 {Array.from({ length: t.rating }).map((_, idx) => (
                   <Star key={idx} size={14} className="fill-gold-400 text-gold-400" />

@@ -60,7 +60,7 @@ export default function Shop() {
   }
 
   return (
-    <section className="py-14 sm:py-16">
+    <section className="bg-white py-14 sm:py-16">
       <div className="container-page">
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <span className="eyebrow">Loja completa</span>

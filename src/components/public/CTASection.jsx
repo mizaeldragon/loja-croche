@@ -51,7 +51,7 @@ export default function CTASection() {
             >
               <Phone size={16} /> Chamar no WhatsApp
             </a>
-            <a href={`mailto:${settings.email}`} className="btn-secondary btn-lg">
+            <a href={`mailto:${settings.email}`} className="btn-secondary btn-lg bg-white hover:bg-white">
               <Mail size={16} /> Enviar e-mail
             </a>
           </div>

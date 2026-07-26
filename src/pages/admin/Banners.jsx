@@ -91,7 +91,7 @@ export default function Banners() {
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-              tab === t.id ? 'bg-espresso-700 text-cream-50' : 'bg-white text-espresso-600 hover:bg-sand-100'
+              tab === t.id ? 'bg-terracotta-500 text-cream-50' : 'bg-white text-espresso-600 hover:bg-sand-100'
             }`}
           >
             {t.label}

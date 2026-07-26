@@ -48,10 +48,10 @@ export default function Hero() {
             className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-espresso-700/8 pt-8"
           >
             <div className="flex items-center gap-2 text-sm text-espresso-500">
-              <ShieldCheck size={17} className="text-caramel-500" /> Peças 100% artesanais
+              <ShieldCheck size={17} className="text-espresso-700" /> Peças 100% artesanais
             </div>
             <div className="flex items-center gap-2 text-sm text-espresso-500">
-              <Truck size={17} className="text-caramel-500" /> Envio para todo o Brasil
+              <Truck size={17} className="text-espresso-700" /> Envio para todo o Brasil
             </div>
           </motion.div>
         </motion.div>
@@ -64,7 +64,7 @@ export default function Hero() {
           transition={{ delay: 0.15, duration: 0.8, ease: easeOut }}
         >
           <div className="relative aspect-[4/5] w-full lg:absolute lg:inset-0 lg:aspect-auto">
-            <div className="absolute -inset-3 -z-10 rounded-[2.5rem] bg-gradient-to-br from-terracotta-400/30 to-caramel-400/25 blur-2xl lg:-inset-4" />
+            <div className="absolute -inset-3 -z-10 rounded-[2.5rem] bg-gradient-to-br from-terracotta-400/30 to-sand-300/35 blur-2xl lg:-inset-4" />
             <div className="absolute inset-0 overflow-hidden rounded-[2rem] border-8 border-white shadow-lift">
               <motion.img
                 src={hero.image}

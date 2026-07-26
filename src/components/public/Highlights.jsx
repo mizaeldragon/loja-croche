@@ -32,7 +32,7 @@ export default function Highlights() {
           </Stagger>
         )}
         <Reveal className="mt-12 text-center" delay={0.15}>
-          <Link to="/loja" className="btn-secondary btn-md">
+          <Link to="/loja" className="btn-secondary btn-md bg-white hover:bg-white">
             Ver coleção completa <ArrowRight size={16} />
           </Link>
         </Reveal>

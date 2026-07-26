@@ -10,7 +10,7 @@ const ICONS = {
 const STYLES = {
   success: 'border-emerald-700/15 text-emerald-800 [&_svg]:text-emerald-600',
   error: 'border-terracotta-600/20 text-terracotta-700 [&_svg]:text-terracotta-600',
-  info: 'border-espresso-700/15 text-espresso-700 [&_svg]:text-caramel-500',
+  info: 'border-espresso-700/15 text-espresso-700 [&_svg]:text-terracotta-500',
 }
 
 export default function Toaster() {

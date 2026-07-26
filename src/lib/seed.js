@@ -7,7 +7,7 @@ const ph = (w, h, bg, fg, text) =>
   `https://placehold.co/${w}x${h}/${bg}/${fg}?font=playfair-display&text=${encodeURIComponent(text)}`
 
 export const PALETTE_BG = ['FDD7CA', 'CCAFA1', 'F5C4B4', 'FFF7F3', 'EAD9D0']
-export const PALETTE_FG = ['A35825', '8A4A1F', '8B4A1F']
+export const PALETTE_FG = ['1F2937', '111827', '4B5563']
 
 export const seedCategories = [
   {
@@ -241,7 +241,7 @@ export const seedTestimonials = [
     role: 'Cliente • São Paulo, SP',
     text: 'A blusa que comprei é ainda mais linda pessoalmente. Dá para sentir o cuidado em cada ponto. Já é minha peça favorita do guarda-roupa.',
     rating: 5,
-    avatar: ph(200, 200, 'CCAFA1', 'A35825', 'MS'),
+    avatar: ph(200, 200, 'CCAFA1', '1F2937', 'MS'),
     featured: true,
   },
   {
@@ -250,7 +250,7 @@ export const seedTestimonials = [
     role: 'Cliente • Belo Horizonte, MG',
     text: 'Encomendei a manta de bebê personalizada e recebi antes do prazo, com uma embalagem impecável. Qualidade de dar inveja.',
     rating: 5,
-    avatar: ph(200, 200, 'FDD7CA', 'A35825', 'CD'),
+    avatar: ph(200, 200, 'FDD7CA', '1F2937', 'CD'),
     featured: true,
   },
   {
@@ -259,7 +259,7 @@ export const seedTestimonials = [
     role: 'Cliente • Curitiba, PR',
     text: 'Atendimento maravilhoso do início ao fim. A bolsa é resistente, linda e recebo elogios toda vez que uso.',
     rating: 5,
-    avatar: ph(200, 200, 'EAD9D0', '8A4A1F', 'FR'),
+    avatar: ph(200, 200, 'EAD9D0', '111827', 'FR'),
     featured: true,
   },
   {
@@ -268,7 +268,7 @@ export const seedTestimonials = [
     role: 'Cliente • Rio de Janeiro, RJ',
     text: 'Comprei o cardigan para o inverno e é simplesmente perfeito — quentinho, elegante e muito bem feito.',
     rating: 5,
-    avatar: ph(200, 200, 'FFF7F3', 'A35825', 'JP'),
+    avatar: ph(200, 200, 'FFF7F3', '1F2937', 'JP'),
     featured: false,
   },
   {
@@ -277,7 +277,7 @@ export const seedTestimonials = [
     role: 'Cliente • Porto Alegre, RS',
     text: 'Já é a terceira peça que compro. A qualidade é sempre impecável e o acabamento surpreende a cada detalhe.',
     rating: 5,
-    avatar: ph(200, 200, 'F5C4B4', '8B4A1F', 'BL'),
+    avatar: ph(200, 200, 'F5C4B4', '4B5563', 'BL'),
     featured: false,
   },
   {
@@ -286,7 +286,7 @@ export const seedTestimonials = [
     role: 'Cliente • Florianópolis, SC',
     text: 'O vestido sob medida ficou exatamente como eu sonhei. Fios lindos, caimento perfeito e um carinho no atendimento que faz toda a diferença.',
     rating: 5,
-    avatar: ph(200, 200, 'CCAFA1', 'A35825', 'HC'),
+    avatar: ph(200, 200, 'CCAFA1', '1F2937', 'HC'),
     featured: true,
   },
 ]
@@ -472,7 +472,7 @@ export const seedUsers = [
     password: 'crochedelicado',
     role: 'admin',
     status: 'ativo',
-    avatar: ph(200, 200, 'EAD9D0', '8A4A1F', 'AT'),
+    avatar: ph(200, 200, 'EAD9D0', '111827', 'AT'),
   },
   {
     id: 'user_editor',
@@ -481,6 +481,6 @@ export const seedUsers = [
     password: 'editor123',
     role: 'editor',
     status: 'ativo',
-    avatar: ph(200, 200, 'FDD7CA', 'A35825', 'EC'),
+    avatar: ph(200, 200, 'FDD7CA', '1F2937', 'EC'),
   },
 ]
