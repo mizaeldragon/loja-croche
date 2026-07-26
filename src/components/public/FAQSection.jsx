@@ -11,7 +11,7 @@ export default function FAQSection() {
   const [openId, setOpenId] = useState(faqs[0]?.id)
 
   return (
-    <section id="faq" className="py-20 sm:py-24">
+    <section id="faq" className="relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_#FDD7CA_0%,_#FFF7F3_55%)] py-20 sm:py-24">
       <div className="container-page mx-auto max-w-3xl">
         <SectionHeading
           eyebrow="Dúvidas frequentes"

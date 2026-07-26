@@ -14,8 +14,13 @@ export default function Home() {
       <Hero />
       <Highlights />
       <About />
-      <Categories />
-      <PromoBanner />
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_#FDD7CA_0%,_#FFF7F3_60%)]" />
+        <div className="relative">
+          <Categories />
+          <PromoBanner />
+        </div>
+      </section>
       <Benefits />
       <Testimonials />
       <FAQSection />

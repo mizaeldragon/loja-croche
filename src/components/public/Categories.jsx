@@ -9,7 +9,7 @@ export default function Categories() {
   const sorted = [...categories].sort((a, b) => a.order - b.order)
 
   return (
-    <section id="categorias" className="py-20 sm:py-24">
+    <div id="categorias" className="py-20 sm:pb-10 sm:pt-24">
       <div className="container-page">
         <SectionHeading
           eyebrow="Explore por categoria"
@@ -42,6 +42,6 @@ export default function Categories() {
           ))}
         </Stagger>
       </div>
-    </section>
+    </div>
   )
 }

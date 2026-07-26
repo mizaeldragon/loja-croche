@@ -11,7 +11,7 @@ export default function Highlights() {
   const featured = products.filter((p) => p.status === 'published' && p.featured).slice(0, 8)
 
   return (
-    <section className="py-20 sm:py-24" id="destaques">
+    <section className="bg-white py-20 sm:py-24" id="destaques">
       <div className="container-page">
         <SectionHeading
           eyebrow="Seleção especial"

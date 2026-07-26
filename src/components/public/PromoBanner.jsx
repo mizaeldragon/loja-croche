@@ -6,7 +6,7 @@ export default function PromoBanner() {
   if (!promo?.title) return null
 
   return (
-    <section className="py-8 sm:py-10">
+    <div className="pb-20 pt-4 sm:pb-24 sm:pt-6">
       <div className="container-page">
         <Reveal variant="scale">
           <div className="relative overflow-hidden rounded-3xl">
@@ -25,6 +25,6 @@ export default function PromoBanner() {
           </div>
         </Reveal>
       </div>
-    </section>
+    </div>
   )
 }
