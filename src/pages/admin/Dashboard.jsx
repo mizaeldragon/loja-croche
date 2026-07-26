@@ -29,8 +29,8 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="card-surface lg:col-span-2">
-          <div className="flex items-center justify-between border-b border-espresso-700/8 p-6">
+        <div className="rounded-3xl bg-white/80 p-0 shadow-card backdrop-blur-sm lg:col-span-2">
+          <div className="flex items-center justify-between p-6 pb-2">
             <div>
               <h3 className="font-display text-lg text-espresso-800">Pedidos recentes</h3>
               <p className="text-xs text-espresso-400">Últimas solicitações recebidas</p>
@@ -39,12 +39,12 @@ export default function Dashboard() {
               Ver todos <ArrowRight size={14} />
             </Link>
           </div>
-          <div className="divide-y divide-espresso-700/6">
+          <div className="space-y-1 px-3 pb-3">
             {recentOrders.length === 0 && (
-              <p className="p-6 text-sm text-espresso-400">Nenhum pedido registrado ainda.</p>
+              <p className="p-3 text-sm text-espresso-400">Nenhum pedido registrado ainda.</p>
             )}
             {recentOrders.map((o) => (
-              <div key={o.id} className="flex items-center justify-between gap-4 px-6 py-4">
+              <div key={o.id} className="flex items-center justify-between gap-4 rounded-2xl px-3 py-3 hover:bg-sand-50/60">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-espresso-800">{o.customerName}</p>
                   <p className="truncate text-xs text-espresso-400">{o.items}</p>
@@ -58,23 +58,23 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="card-surface p-6">
+        <div className="rounded-3xl bg-white/80 p-6 shadow-card backdrop-blur-sm">
           <h3 className="mb-1 font-display text-lg text-espresso-800">Ações rápidas</h3>
           <p className="mb-5 text-xs text-espresso-400">Gerencie seu catálogo em poucos cliques</p>
           <div className="space-y-2.5">
             <Link to="/admin/produtos/novo" className="btn-primary btn-md w-full !justify-start">
               <Plus size={16} /> Novo produto
             </Link>
-            <Link to="/admin/categorias" className="btn-secondary btn-md w-full !justify-start">
+            <Link to="/admin/categorias" className="btn-secondary btn-md w-full !justify-start bg-white hover:bg-white">
               <Tags size={16} /> Gerenciar categorias
             </Link>
-            <Link to="/admin/banners" className="btn-secondary btn-md w-full !justify-start">
+            <Link to="/admin/banners" className="btn-secondary btn-md w-full !justify-start bg-white hover:bg-white">
               <Sparkles size={16} /> Editar conteúdo da home
             </Link>
           </div>
 
           {lowStock.length > 0 && (
-            <div className="mt-6 rounded-2xl border border-terracotta-600/15 bg-terracotta-600/5 p-4">
+            <div className="mt-6 rounded-2xl bg-terracotta-600/5 p-4">
               <p className="flex items-center gap-1.5 text-xs font-semibold text-terracotta-600">
                 <TrendingUp size={13} /> Estoque baixo
               </p>
@@ -90,8 +90,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="card-surface">
-        <div className="flex items-center justify-between border-b border-espresso-700/8 p-6">
+      <div className="rounded-3xl bg-white/80 shadow-card backdrop-blur-sm">
+        <div className="flex items-center justify-between p-6 pb-2">
           <div>
             <h3 className="font-display text-lg text-espresso-800">Produtos em destaque no catálogo</h3>
             <p className="text-xs text-espresso-400">Mais vendidos e novidades</p>
@@ -100,9 +100,9 @@ export default function Dashboard() {
             Gerenciar produtos <ArrowRight size={14} />
           </Link>
         </div>
-        <div className="grid grid-cols-1 divide-y divide-espresso-700/6 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-1 p-3 sm:grid-cols-2 lg:grid-cols-5">
           {topProducts.map((p) => (
-            <div key={p.id} className="flex items-center gap-3 p-4">
+            <div key={p.id} className="flex items-center gap-3 rounded-2xl p-3 hover:bg-sand-50/60">
               <img src={p.images?.[0]} alt={p.name} className="h-12 w-12 rounded-xl object-cover" />
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-espresso-800">{p.name}</p>

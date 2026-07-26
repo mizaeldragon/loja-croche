@@ -53,7 +53,7 @@
   }
 
   .card-surface {
-    @apply rounded-3xl border border-espresso-700/[0.06] bg-white/70 shadow-card backdrop-blur-sm;
+    @apply rounded-3xl bg-white/80 shadow-card backdrop-blur-sm;
   }
 
   .input-field {

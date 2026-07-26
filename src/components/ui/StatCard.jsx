@@ -5,7 +5,7 @@ export default function StatCard({ icon: Icon, label, value, trend, tone = 'defa
       className={`flex items-start justify-between gap-4 rounded-3xl p-5 shadow-card ${
         isAccent
           ? 'bg-gradient-to-br from-terracotta-400 to-terracotta-600 text-cream-50'
-          : 'border border-espresso-700/[0.06] bg-white text-espresso-700'
+          : 'bg-white/80 text-espresso-700 backdrop-blur-sm'
       }`}
     >
       <div>

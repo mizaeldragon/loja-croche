@@ -10,7 +10,7 @@ export default function Topbar({ title, subtitle, onMenuClick }) {
   const navigate = useNavigate()
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-espresso-700/8 bg-cream-50/90 px-5 py-4 backdrop-blur sm:px-8">
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-4 bg-white px-5 py-4 sm:px-8">
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuClick}
