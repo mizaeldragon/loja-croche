@@ -26,12 +26,12 @@ export default function ProductCard({ product }) {
           />
           <div className="absolute left-3 top-3 flex flex-col gap-1.5">
             {product.isNew && (
-              <span className="rounded-full bg-espresso-800/90 px-2.5 py-1 text-[0.65rem] font-semibold tracking-wide text-cream-50">
+              <span className="rounded-full bg-espresso-700/90 px-2.5 py-1 text-[0.65rem] font-semibold tracking-wide text-cream-50">
                 Novidade
               </span>
             )}
             {product.bestseller && (
-              <span className="rounded-full bg-gold-400/95 px-2.5 py-1 text-[0.65rem] font-semibold tracking-wide text-espresso-800">
+              <span className="rounded-full bg-gold-400/95 px-2.5 py-1 text-[0.65rem] font-semibold tracking-wide text-cream-50">
                 Mais vendido
               </span>
             )}

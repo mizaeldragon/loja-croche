@@ -8,14 +8,14 @@ export default function Benefits() {
   const benefits = useCatalogStore((s) => s.settings.benefits)
 
   return (
-    <section className="bg-espresso-800 py-20 text-cream-100 sm:py-24">
+    <section className="bg-white py-20 text-espresso-700 sm:py-24">
       <div className="container-page">
         <Reveal className="mx-auto mb-14 max-w-2xl text-center">
-          <span className="eyebrow text-caramel-300">Por que escolher o ateliê</span>
-          <h2 className="mt-3 text-balance font-display text-3xl leading-tight text-cream-50 sm:text-4xl">
+          <span className="eyebrow">Por que escolher o ateliê</span>
+          <h2 className="mt-3 text-balance font-display text-3xl leading-tight text-espresso-800 sm:text-4xl">
             Diferenciais que você sente ao tocar
           </h2>
-          <p className="mt-4 text-balance text-[0.95rem] leading-relaxed text-cream-100/65">
+          <p className="mt-4 text-balance text-[0.95rem] leading-relaxed text-espresso-600/80">
             Cada detalhe é pensado para entregar mais do que uma peça — uma experiência de exclusividade e cuidado.
           </p>
         </Reveal>
@@ -26,13 +26,13 @@ export default function Benefits() {
             return (
               <StaggerItem
                 key={b.title}
-                className="rounded-3xl border border-cream-100/10 bg-cream-100/[0.04] p-7 transition-colors hover:bg-cream-100/[0.07]"
+                className="rounded-3xl border border-espresso-700/8 bg-cream-50 p-7 transition-colors hover:bg-sand-50"
               >
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-caramel-400 to-gold-500 text-espresso-800">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-terracotta-400 to-caramel-500 text-cream-50">
                   <Icon size={22} strokeWidth={1.7} />
                 </div>
-                <h3 className="font-display text-lg text-cream-50">{b.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-cream-100/65">{b.desc}</p>
+                <h3 className="font-display text-lg text-espresso-800">{b.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-espresso-600/80">{b.desc}</p>
               </StaggerItem>
             )
           })}

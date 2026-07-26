@@ -3,14 +3,14 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Sparkles, ShieldCheck, Truck } from 'lucide-react'
 import { useCatalogStore } from '../../store/useCatalogStore'
 import HeroCarousel from './HeroCarousel'
-import { easeOut, fadeUp, scaleIn, staggerContainer, staggerItem } from '../../lib/motion'
+import { easeOut, scaleIn, staggerContainer, staggerItem } from '../../lib/motion'
 
 export default function Hero() {
   const hero = useCatalogStore((s) => s.banners.hero)
   const reduce = useReducedMotion()
 
   return (
-    <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_#EFE3CE_0%,_#FAF6EF_55%)]">
+    <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_#FDD7CA_0%,_#FFF7F3_55%)]">
       <div className="pointer-events-none absolute inset-0 bg-grain" />
       <div className="container-page relative grid grid-cols-1 items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1fr_1.15fr] lg:items-stretch lg:gap-10 lg:py-24">
         <motion.div
@@ -64,27 +64,17 @@ export default function Hero() {
           transition={{ delay: 0.15, duration: 0.8, ease: easeOut }}
         >
           <div className="relative aspect-[4/5] w-full lg:absolute lg:inset-0 lg:aspect-auto">
-            <div className="absolute -inset-3 -z-10 rounded-[2.5rem] bg-gradient-to-br from-caramel-300/40 to-terracotta-400/20 blur-2xl lg:-inset-4" />
+            <div className="absolute -inset-3 -z-10 rounded-[2.5rem] bg-gradient-to-br from-terracotta-400/30 to-caramel-400/25 blur-2xl lg:-inset-4" />
             <div className="absolute inset-0 overflow-hidden rounded-[2rem] border-8 border-white shadow-lift">
               <motion.img
                 src={hero.image}
-                alt="Peças de crochê artesanal"
-                className="h-full w-full object-cover"
+                alt="Ateliê Angel Art Crochê"
+                className="h-full w-full object-cover object-center"
                 initial={reduce ? false : { scale: 1.08 }}
                 animate={reduce ? undefined : { scale: 1 }}
                 transition={{ duration: 1.2, ease: easeOut }}
               />
             </div>
-            <motion.div
-              className="absolute bottom-4 left-4 hidden rounded-2xl border border-espresso-700/8 bg-white px-5 py-4 shadow-lift sm:block"
-              variants={reduce ? undefined : fadeUp}
-              initial={reduce ? false : 'hidden'}
-              animate={reduce ? undefined : 'show'}
-              transition={{ delay: 0.55 }}
-            >
-              <p className="font-display text-2xl text-espresso-800">12 anos</p>
-              <p className="text-xs text-espresso-400">de ofício artesanal</p>
-            </motion.div>
           </div>
         </motion.div>
       </div>

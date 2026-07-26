@@ -32,7 +32,7 @@ export default function Sidebar({ open, onClose }) {
     <>
       {open && <div className="fixed inset-0 z-40 bg-espresso-900/40 lg:hidden" onClick={onClose} />}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-espresso-700/8 bg-espresso-800 text-cream-100 transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-espresso-700/10 bg-white text-espresso-700 transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -41,9 +41,9 @@ export default function Sidebar({ open, onClose }) {
             to="/admin"
             name={siteName}
             tagline="Painel Admin"
-            tone="dark"
+            tone="light"
           />
-          <button onClick={onClose} className="text-cream-100/60 lg:hidden" aria-label="Fechar menu">
+          <button onClick={onClose} className="text-espresso-500 lg:hidden" aria-label="Fechar menu">
             <X size={20} />
           </button>
         </div>
@@ -57,8 +57,8 @@ export default function Sidebar({ open, onClose }) {
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-gradient-to-r from-caramel-500 to-caramel-600 text-cream-50 shadow-soft'
-                    : 'text-cream-100/70 hover:bg-cream-100/8 hover:text-cream-50'
+                    ? 'bg-gradient-to-r from-terracotta-500 to-caramel-500 text-cream-50 shadow-soft'
+                    : 'text-espresso-600 hover:bg-sand-50 hover:text-espresso-800'
                 }`
               }
             >
@@ -68,12 +68,12 @@ export default function Sidebar({ open, onClose }) {
           ))}
         </nav>
 
-        <div className="border-t border-cream-100/10 p-4">
+        <div className="border-t border-espresso-700/8 p-4">
           <a
             href="/"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-center gap-2 rounded-xl border border-cream-100/15 px-4 py-3 text-sm font-medium text-cream-100/80 transition-colors hover:bg-cream-100/8"
+            className="flex items-center justify-center gap-2 rounded-xl border border-espresso-700/15 px-4 py-3 text-sm font-medium text-espresso-600 transition-colors hover:bg-sand-50"
           >
             <ExternalLink size={15} /> Ver site publicado
           </a>

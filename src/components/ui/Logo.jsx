@@ -3,49 +3,24 @@ import clsx from 'clsx'
 
 function Mark({ className }) {
   return (
-    <svg
-      viewBox="0 0 64 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-hidden="true"
-    >
-      <rect width="64" height="64" rx="18" fill="#F5EEE1" />
-      <circle cx="30" cy="34" r="16" fill="#E4D4B8" />
-      <path
-        d="M18 28c4 1 8-1 12 1s7 2 12-1M17 34c5 1.5 9-1 13 1s8 2 14-1M19 40c4 .8 8-1 12 .8s8 1.5 12-.5"
-        stroke="#A2573A"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-      />
-      <path
-        d="M22 23c2.5 5 2 11 0 17M30 21c1.5 5.5 1.2 12 0 19M38 23c-1.8 5-1.5 11 0 16"
-        stroke="#C89B6B"
-        strokeWidth="1.25"
-        strokeLinecap="round"
-        opacity=".9"
-      />
-      <path d="M42 12l8 8-22 22-4-4 18-26z" fill="#3D2B20" />
-      <path
-        d="M50 20c2.8-2.8 5.2-2.2 6.5-.8 1.4 1.4 1.8 3.8-.8 6.5"
-        stroke="#B99655"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <circle cx="48.5" cy="18.5" r="1.6" fill="#B99655" />
-    </svg>
+    <img
+      src="/logo.png"
+      alt=""
+      className={clsx('shrink-0 object-cover', className)}
+      draggable={false}
+    />
   )
 }
 
 /**
- * Logo Linha & Ponto
+ * Logo Ateliê Angel Art Crochê
  * @param {'full'|'mark'} variant
  * @param {'light'|'dark'} tone — light = fundo claro; dark = fundo escuro (footer/admin)
  */
 export default function Logo({
   variant = 'full',
   tone = 'light',
-  name = 'Linha & Ponto',
+  name = 'Angel Art',
   tagline,
   to,
   className,
@@ -55,7 +30,12 @@ export default function Logo({
 
   const content = (
     <>
-      <Mark className={clsx('h-10 w-10 shrink-0 overflow-hidden rounded-[18px]', markClassName)} />
+      <Mark
+        className={clsx(
+          'h-11 w-11 rounded-full bg-cream-50 shadow-soft ring-1 ring-espresso-700/10',
+          markClassName
+        )}
+      />
       {variant === 'full' && (
         <span className="min-w-0 leading-tight">
           <span

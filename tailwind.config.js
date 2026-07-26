@@ -8,55 +8,62 @@ export default {
         sans: ['"Inter"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
+        // #FDD7CA — fundo claro / pêssego
         cream: {
-          50: '#FEFCF9',
-          100: '#FAF6EF',
-          200: '#F5EEE1',
+          50: '#FFF7F3',
+          100: '#FDD7CA',
+          200: '#F5C4B4',
         },
+        // #CCAFA1 — bege / taupe
         sand: {
-          50: '#F5EEE1',
-          100: '#EFE3CE',
-          200: '#E4D4B8',
-          300: '#D6C09E',
-          400: '#C6A87F',
+          50: '#F7EEE9',
+          100: '#EAD9D0',
+          200: '#DCC4B8',
+          300: '#CCAFA1',
+          400: '#B89788',
         },
+        // #A35825 — marrom cobre (ações secundárias / suporte)
         caramel: {
-          300: '#D7AE7C',
-          400: '#C89B6B',
-          500: '#B98352',
-          600: '#9C6B3E',
+          300: '#D49262',
+          400: '#C0743D',
+          500: '#A35825',
+          600: '#8A4A1F',
         },
+        // #E75482 — rosa destaque
         terracotta: {
-          400: '#C97B5C',
-          500: '#BC6B4A',
-          600: '#A2573A',
+          400: '#F0789E',
+          500: '#E75482',
+          600: '#D13D6C',
         },
+        // Rosa usado onde antes era "gold"
         gold: {
-          300: '#D4B978',
-          400: '#B99655',
-          500: '#A3843F',
+          300: '#F4A0BB',
+          400: '#E75482',
+          500: '#C93E6A',
         },
+        // Escala a partir do #A35825 (sem #6E3A18 — fundos escuros viraram branco)
         espresso: {
-          400: '#8A6E58',
-          500: '#6B4F3D',
-          600: '#523A2B',
-          700: '#3D2B20',
-          800: '#2B1E16',
-          900: '#1D140E',
+          400: '#CCAFA1',
+          500: '#B87A52',
+          600: '#A35825',
+          700: '#8B4A1F',
+          800: '#8A4A1F',
+          900: '#4A2710',
         },
       },
       boxShadow: {
-        soft: '0 2px 8px 0 rgb(61 43 32 / 0.06)',
-        card: '0 4px 20px -4px rgb(61 43 32 / 0.10)',
-        lift: '0 12px 32px -8px rgb(61 43 32 / 0.18)',
-        inset: 'inset 0 1px 2px 0 rgb(61 43 32 / 0.06)',
+        soft: '0 2px 8px 0 rgb(163 88 37 / 0.08)',
+        card: '0 4px 20px -4px rgb(163 88 37 / 0.12)',
+        lift: '0 12px 32px -8px rgb(163 88 37 / 0.18)',
+        inset: 'inset 0 1px 2px 0 rgb(163 88 37 / 0.06)',
       },
       borderRadius: {
         xl2: '1.25rem',
         '3xl': '1.75rem',
       },
       backgroundImage: {
-        'grain': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E\")",
+        grain:
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E\")",
       },
       keyframes: {
         fadeUp: {

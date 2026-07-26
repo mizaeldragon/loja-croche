@@ -29,7 +29,7 @@ export default function About() {
 
         <Reveal className="order-1 lg:order-2" variant="scale" delay={0.1}>
           <div className="relative mx-auto max-w-md">
-            <div className="absolute -inset-4 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-terracotta-400/20 to-caramel-300/30 blur-2xl" />
+            <div className="absolute -inset-4 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-terracotta-400/25 to-caramel-300/30 blur-2xl" />
             <div className="overflow-hidden rounded-[2rem] border-8 border-white shadow-lift">
               <img src={settings.aboutImage} alt="Ateliê de crochê" className="aspect-[4/5] w-full object-cover" />
             </div>

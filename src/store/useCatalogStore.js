@@ -149,16 +149,31 @@ export const useCatalogStore = create(
     }),
     {
       name: 'atelie-linha-e-ponto:catalog',
-      version: 5,
+      version: 10,
       migrate: (persistedState, version) => {
-        if (version < 5) {
+        if (version < 9) {
           return {
             ...persistedState,
             categories: seedCategories,
             products: seedProducts,
             testimonials: seedTestimonials,
-            banners: seedBanners,
-            settings: seedSettings,
+            banners: {
+              ...seedBanners,
+              ...(persistedState?.banners || {}),
+              hero: {
+                ...(persistedState?.banners?.hero || {}),
+                ...seedBanners.hero,
+                image: `${seedBanners.hero.image}?v=9`,
+              },
+            },
+            settings: {
+              ...seedSettings,
+              ...(persistedState?.settings || {}),
+              siteName: seedSettings.siteName,
+              tagline: seedSettings.tagline,
+              aboutText: seedSettings.aboutText,
+            },
+            orders: seedOrders,
           }
         }
         return persistedState

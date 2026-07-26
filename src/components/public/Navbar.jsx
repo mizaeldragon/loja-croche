@@ -81,7 +81,7 @@ export default function Navbar() {
       className={clsx(
         'sticky top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ease-out',
         scrolled
-          ? 'border-b border-espresso-700/[0.06] bg-cream-50/80 shadow-[0_8px_30px_-12px_rgb(61_43_32_/_0.12)] backdrop-blur-xl'
+          ? 'border-b border-espresso-700/[0.06] bg-cream-50/80 shadow-[0_8px_30px_-12px_rgb(163_88_37_/_0.14)] backdrop-blur-xl'
           : 'border-b border-transparent bg-cream-50/55 backdrop-blur-md'
       )}
     >
@@ -91,7 +91,7 @@ export default function Navbar() {
           name={settings.siteName}
           tagline={settings.tagline}
           className="min-w-0 justify-self-start"
-          markClassName="h-11 w-11 rounded-2xl shadow-soft"
+          markClassName="h-12 w-12 shadow-soft"
         />
 
         <div className="hidden justify-self-center lg:block">

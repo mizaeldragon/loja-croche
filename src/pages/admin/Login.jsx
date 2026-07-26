@@ -36,15 +36,15 @@ export default function Login() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_#EFE3CE_0%,_#FAF6EF_60%)] px-4 py-12">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_#FDD7CA_0%,_#FFF7F3_60%)] px-4 py-12">
       <div className="pointer-events-none absolute inset-0 bg-grain" />
       <div className="relative w-full max-w-md animate-fadeUp">
         <div className="mb-8 flex flex-col items-center text-center">
           <Logo
-            name="Linha & Ponto"
-            tagline="Painel Administrativo"
+            name="Angel Art"
+            tagline="Ateliê de Crochê"
             className="flex-col gap-3"
-            markClassName="h-14 w-14 shadow-soft"
+            markClassName="h-16 w-16 shadow-soft"
           />
         </div>
 

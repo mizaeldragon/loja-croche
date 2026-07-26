@@ -32,7 +32,7 @@ export default function ImageUploader({ images = [], onChange, max = 6 }) {
           <div key={idx} className="group relative aspect-square overflow-hidden rounded-2xl border border-espresso-700/8">
             <img src={src} alt={`Imagem ${idx + 1}`} className="h-full w-full object-cover" />
             {idx === 0 && (
-              <span className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded-full bg-espresso-800/85 px-2 py-0.5 text-[0.6rem] font-semibold text-cream-50">
+              <span className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded-full bg-espresso-700/85 px-2 py-0.5 text-[0.6rem] font-semibold text-cream-50">
                 <Star size={10} fill="currentColor" /> Capa
               </span>
             )}

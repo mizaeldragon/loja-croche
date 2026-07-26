@@ -32,7 +32,7 @@ export default function CTASection() {
 
   return (
     <section id="contato" className="relative overflow-hidden py-20 sm:py-24">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_#EFE3CE_0%,_#FAF6EF_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_#FDD7CA_0%,_#FFF7F3_60%)]" />
       <div className="container-page relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
         <Reveal>
           <span className="eyebrow">Vamos criar algo especial</span>
