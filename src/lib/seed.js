@@ -340,7 +340,7 @@ export const seedBanners = {
     primaryCtaLink: '/loja',
     secondaryCta: 'Pedir orçamento',
     secondaryCtaLink: '#contato',
-    image: local('banners/hero.png') + '?v=9',
+    image: local('banners/hero.png') + '?v=10',
   },
   carousel: [
     {
@@ -397,12 +397,12 @@ export const seedSettings = {
     { label: 'Clientes felizes', value: '1.100+' },
     { label: 'Anos de ofício', value: '12' },
   ],
-  email: 'contato@linhaeponto.com.br',
-  phone: '(11) 98888-4455',
-  whatsapp: '5511988884455',
-  instagram: '@linhaeponto.atelie',
-  facebook: 'linhaepontoatelie',
-  address: 'São Paulo, SP — Atendimento sob agendamento',
+  email: 'contato@ateliêangelartcrochê.com.br',
+  phone: '(34) 9337-0311',
+  whatsapp: '553493370311',
+  instagram: '@atelieangelartcroche',
+  facebook: 'https://www.facebook.com/profile.php?id=61559814745846',
+  address: 'Rua Salerno 81, Bairro Jardim Europa, Uberlândia MG — CEP 38414689',
   footerText:
     'Crochê artesanal feito à mão: peças únicas para casa, presentes e momentos especiais.',
   ctaTitle: 'Quer uma peça pensada especialmente para você?',

@@ -57,19 +57,19 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
-          className="relative order-1 w-full max-w-xl justify-self-center lg:order-2 lg:max-w-none lg:justify-self-stretch"
+          className="relative order-1 mx-auto w-full max-w-md justify-self-center lg:order-2 lg:max-w-lg lg:justify-self-center"
           variants={reduce ? undefined : scaleIn}
           initial={reduce ? false : 'hidden'}
           animate={reduce ? undefined : 'show'}
           transition={{ delay: 0.15, duration: 0.8, ease: easeOut }}
         >
-          <div className="relative aspect-[4/5] w-full lg:absolute lg:inset-0 lg:aspect-auto">
-            <div className="absolute -inset-3 -z-10 rounded-[2.5rem] bg-gradient-to-br from-terracotta-400/30 to-sand-300/35 blur-2xl lg:-inset-4" />
-            <div className="absolute inset-0 overflow-hidden rounded-[2rem] border-8 border-white shadow-lift">
+          <div className="relative aspect-square w-full">
+            <div className="absolute -inset-3 -z-10 rounded-full bg-gradient-to-br from-terracotta-400/30 to-sand-300/35 blur-2xl lg:-inset-4" />
+            <div className="absolute inset-0 overflow-hidden rounded-full border-8 border-white shadow-lift">
               <motion.img
                 src={hero.image}
                 alt="Ateliê Angel Art Crochê"
-                className="h-full w-full object-cover object-center"
+                className="h-full w-full object-contain object-center"
                 initial={reduce ? false : { scale: 1.08 }}
                 animate={reduce ? undefined : { scale: 1 }}
                 transition={{ duration: 1.2, ease: easeOut }}

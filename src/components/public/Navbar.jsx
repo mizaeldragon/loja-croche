@@ -79,12 +79,17 @@ export default function Navbar() {
   return (
     <header
       className={clsx(
-        'sticky top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ease-out',
-        scrolled
-          ? 'border-b border-espresso-700/[0.06] bg-cream-50/80 shadow-[0_8px_30px_-12px_rgb(17_24_39_/_0.10)] backdrop-blur-xl'
-          : 'border-b border-transparent bg-cream-50/55 backdrop-blur-md'
+        'sticky top-0 z-50 transition-[padding] duration-500 ease-out',
+        scrolled ? 'px-3 pt-3 sm:px-5' : 'px-0 pt-0'
       )}
     >
+      <div
+        className={clsx(
+          'mx-auto max-w-7xl overflow-hidden transition-all duration-500 ease-out',
+          scrolled &&
+            'rounded-2xl border border-espresso-700/[0.06] bg-cream-50/85 shadow-[0_8px_30px_-12px_rgb(17_24_39_/_0.18)] backdrop-blur-xl'
+        )}
+      >
       <nav className="container-page grid h-[4.75rem] grid-cols-[auto_1fr_auto] items-center gap-4 lg:grid-cols-[1fr_auto_1fr]">
         <Logo
           to="/"
@@ -95,12 +100,7 @@ export default function Navbar() {
         />
 
         <div className="hidden justify-self-center lg:block">
-          <div
-            className={clsx(
-              'flex items-center gap-1 rounded-full px-2 py-1.5 transition-all duration-500',
-              scrolled ? 'bg-white/70 shadow-soft ring-1 ring-espresso-700/[0.06]' : 'bg-transparent'
-            )}
-          >
+          <div className="flex items-center gap-1">
             {LINKS.map((l) => {
               const active = isLinkActive(l, location.pathname, hash)
               return (
@@ -166,6 +166,7 @@ export default function Navbar() {
             <ShoppingBag size={16} /> Ver coleção
           </Link>
         </div>
+      </div>
       </div>
     </header>
   )

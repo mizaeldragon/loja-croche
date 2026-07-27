@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Instagram, Mail, Phone, MapPin } from 'lucide-react'
+import { Instagram, Facebook, Mail, Phone, MapPin } from 'lucide-react'
 import { useCatalogStore } from '../../store/useCatalogStore'
 import Logo from '../ui/Logo'
 import WhatsAppIcon from '../ui/WhatsAppIcon'
@@ -33,6 +33,15 @@ export default function Footer() {
               aria-label="WhatsApp"
             >
               <WhatsAppIcon size={16} />
+            </a>
+            <a
+              href={settings.facebook}
+              target="_blank"
+              rel="noreferrer"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-espresso-700/15 transition-colors hover:bg-sand-50"
+              aria-label="Facebook"
+            >
+              <Facebook size={16} />
             </a>
           </div>
         </div>

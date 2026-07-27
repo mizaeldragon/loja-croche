@@ -149,8 +149,29 @@ export const useCatalogStore = create(
     }),
     {
       name: 'atelie-linha-e-ponto:catalog',
-      version: 11,
+      version: 13,
       migrate: (persistedState, version) => {
+        if (version < 12) {
+          persistedState = {
+            ...persistedState,
+            settings: {
+              ...persistedState?.settings,
+              phone: seedSettings.phone,
+              whatsapp: seedSettings.whatsapp,
+              instagram: seedSettings.instagram,
+              address: seedSettings.address,
+            },
+          }
+        }
+        if (version < 13) {
+          persistedState = {
+            ...persistedState,
+            settings: {
+              ...persistedState?.settings,
+              facebook: seedSettings.facebook,
+            },
+          }
+        }
         if (version < 9) {
           return {
             ...persistedState,
