@@ -7,6 +7,7 @@ import {
   MessageSquareQuote,
   GalleryHorizontal,
   Settings,
+  Plug,
   Users,
   ExternalLink,
   X,
@@ -22,6 +23,7 @@ const NAV = [
   { to: '/admin/depoimentos', label: 'Depoimentos', icon: MessageSquareQuote },
   { to: '/admin/banners', label: 'Banners & Conteúdo', icon: GalleryHorizontal },
   { to: '/admin/usuarios', label: 'Usuários', icon: Users },
+  { to: '/admin/integracoes', label: 'Integrações', icon: Plug },
   { to: '/admin/configuracoes', label: 'Configurações', icon: Settings },
 ]
 

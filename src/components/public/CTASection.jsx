@@ -1,33 +1,38 @@
 import { useState } from 'react'
 import { Send, Phone, Mail } from 'lucide-react'
 import { useCatalogStore } from '../../store/useCatalogStore'
-import { notifySuccess } from '../../store/useToastStore'
+import { notifyError, notifySuccess } from '../../store/useToastStore'
 import { TextField, TextAreaField } from '../ui/Field'
 import { Reveal } from '../motion/Reveal'
 
 export default function CTASection() {
   const settings = useCatalogStore((s) => s.settings)
-  const addOrder = useCatalogStore((s) => s.addOrder)
+  const addQuote = useCatalogStore((s) => s.addQuote)
   const [form, setForm] = useState({ name: '', contact: '', message: '' })
   const [sending, setSending] = useState(false)
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     if (!form.name || !form.contact) return
     setSending(true)
-    setTimeout(() => {
-      addOrder({
-        customerName: form.name,
-        contact: form.contact,
-        email: form.contact.includes('@') ? form.contact : '',
-        items: `Orçamento: ${form.message || 'Sem detalhes informados'}`,
-        total: null,
-        type: 'orcamento',
+
+    // O formulário pede um contato só: descobrimos aqui se é e-mail ou telefone.
+    const isEmail = form.contact.includes('@')
+
+    try {
+      await addQuote({
+        name: form.name,
+        email: isEmail ? form.contact : '',
+        phone: isEmail ? '' : form.contact,
+        message: form.message,
       })
-      setSending(false)
       setForm({ name: '', contact: '', message: '' })
       notifySuccess('Recebemos sua solicitação! Retornaremos em breve.')
-    }, 700)
+    } catch (err) {
+      notifyError(err.message || 'Não foi possível enviar agora. Tente novamente.')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (

@@ -20,7 +20,6 @@ import StatusBadge from '../../components/ui/StatusBadge'
 import EmptyState from '../../components/ui/EmptyState'
 import ConfirmDialog from '../../components/ui/ConfirmDialog'
 import Pagination from '../../components/ui/Pagination'
-import { TableRowSkeleton } from '../../components/ui/Skeleton'
 import { notifySuccess } from '../../store/useToastStore'
 
 const PAGE_SIZE = 8

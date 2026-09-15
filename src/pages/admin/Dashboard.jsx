@@ -12,8 +12,12 @@ export default function Dashboard() {
   const products = useCatalogStore((s) => s.products)
   const categories = useCatalogStore((s) => s.categories)
   const orders = useCatalogStore((s) => s.orders)
+  const quotes = useCatalogStore((s) => s.quotes)
 
   const published = products.filter((p) => p.status === 'published')
+  const faturamento = orders
+    .filter((o) => o.paymentStatus === 'pago')
+    .reduce((sum, o) => sum + o.total, 0)
   const featured = products.filter((p) => p.featured)
   const lowStock = products.filter((p) => p.stock <= 3 && p.status === 'published')
   const recentOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5)
@@ -25,7 +29,12 @@ export default function Dashboard() {
         <StatCard icon={Package} label="Total de produtos" value={products.length} trend={`${published.length} publicados`} tone="caramel" />
         <StatCard icon={Sparkles} label="Produtos em destaque" value={featured.length} trend="Vitrine da home" />
         <StatCard icon={Tags} label="Categorias cadastradas" value={categories.length} />
-        <StatCard icon={ClipboardList} label="Pedidos / orçamentos" value={orders.length} trend={`${orders.filter((o) => o.status === 'novo').length} novos`} />
+        <StatCard
+          icon={ClipboardList}
+          label="Pedidos"
+          value={orders.length}
+          trend={`${formatCurrency(faturamento)} recebidos · ${quotes.length} orçamentos`}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -46,8 +55,12 @@ export default function Dashboard() {
             {recentOrders.map((o) => (
               <div key={o.id} className="flex items-center justify-between gap-4 rounded-2xl px-3 py-3 hover:bg-sand-50/60">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-espresso-800">{o.customerName}</p>
-                  <p className="truncate text-xs text-espresso-400">{o.items}</p>
+                  <p className="truncate text-sm font-semibold text-espresso-800">
+                    #{o.number} · {o.customer?.name}
+                  </p>
+                  <p className="truncate text-xs text-espresso-400">
+                    {o.items?.map((i) => `${i.quantity}× ${i.productName}`).join(', ')}
+                  </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
                   <span className="text-xs text-espresso-400">{formatDate(o.createdAt)}</span>

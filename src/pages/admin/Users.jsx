@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2, Users as UsersIcon } from 'lucide-react'
 import usePageHeader from '../../lib/usePageHeader'
 import { useUserStore } from '../../store/useUserStore'
@@ -16,6 +16,7 @@ export default function Users() {
   usePageHeader('Usuários', 'Gerencie quem tem acesso ao painel administrativo')
 
   const users = useUserStore((s) => s.users)
+  const loadUsers = useUserStore((s) => s.load)
   const addUser = useUserStore((s) => s.addUser)
   const updateUser = useUserStore((s) => s.updateUser)
   const deleteUser = useUserStore((s) => s.deleteUser)
@@ -25,24 +26,41 @@ export default function Users() {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(emptyUser)
   const [toDelete, setToDelete] = useState(null)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    loadUsers()
+  }, [loadUsers])
 
   const openNew = () => { setEditing(null); setForm(emptyUser); setModalOpen(true) }
   const openEdit = (u) => { setEditing(u); setForm({ ...u, password: '' }); setModalOpen(true) }
 
-  const save = (e) => {
+  const save = async (e) => {
     e.preventDefault()
     if (!form.name?.trim() || !form.email?.trim()) return
-    if (editing) {
-      const payload = { ...form }
-      if (!payload.password) delete payload.password
-      updateUser(editing.id, payload)
-      notifySuccess('Usuário atualizado.')
-    } else {
-      if (!form.password) { notifyError('Defina uma senha para o novo usuário.'); return }
-      addUser(form)
-      notifySuccess('Usuário criado com sucesso.')
+    if (!editing && !form.password) {
+      notifyError('Defina uma senha para o novo usuário.')
+      return
     }
-    setModalOpen(false)
+
+    setSaving(true)
+    try {
+      if (editing) {
+        const payload = { ...form }
+        // Campo em branco significa "manter a senha atual".
+        if (!payload.password) delete payload.password
+        await updateUser(editing.id, payload)
+        notifySuccess('Usuário atualizado.')
+      } else {
+        await addUser(form)
+        notifySuccess('Usuário criado com sucesso.')
+      }
+      setModalOpen(false)
+    } catch (err) {
+      notifyError(err.message || 'Não foi possível salvar o usuário.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const requestDelete = (u) => {
@@ -78,7 +96,17 @@ export default function Users() {
                   <tr key={u.id} className="hover:bg-sand-50/60">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <img src={u.avatar} alt={u.name} className="h-10 w-10 rounded-full object-cover" />
+                        {u.avatar ? (
+                          <img
+                            src={u.avatar}
+                            alt=""
+                            className="h-10 w-10 rounded-full object-cover"
+                          />
+                        ) : (
+                          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-espresso-700/8 text-sm font-semibold text-espresso-600">
+                            {u.name.slice(0, 2).toUpperCase()}
+                          </span>
+                        )}
                         <div>
                           <p className="text-sm font-semibold text-espresso-800">{u.name}</p>
                           <p className="text-xs text-espresso-400">{u.email}</p>
@@ -128,7 +156,9 @@ export default function Users() {
           </div>
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={() => setModalOpen(false)} className="btn-secondary btn-md flex-1">Cancelar</button>
-            <button type="submit" className="btn-primary btn-md flex-1">Salvar</button>
+            <button type="submit" disabled={saving} className="btn-primary btn-md flex-1 disabled:opacity-60">
+              {saving ? 'Salvando...' : 'Salvar'}
+            </button>
           </div>
         </form>
       </Modal>
@@ -139,7 +169,16 @@ export default function Users() {
         title="Excluir usuário?"
         description={`Deseja remover o acesso de "${toDelete?.name}"?`}
         confirmLabel="Excluir"
-        onConfirm={() => { deleteUser(toDelete.id); notifySuccess('Usuário removido.') }}
+        onConfirm={async () => {
+          try {
+            await deleteUser(toDelete.id)
+            notifySuccess('Usuário removido.')
+          } catch (err) {
+            notifyError(err.message || 'Não foi possível remover o usuário.')
+          } finally {
+            setToDelete(null)
+          }
+        }}
       />
     </div>
   )

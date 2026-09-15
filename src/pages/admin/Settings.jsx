@@ -1,29 +1,40 @@
-import { useState } from 'react'
-import { Save, RotateCcw } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Save } from 'lucide-react'
 import usePageHeader from '../../lib/usePageHeader'
 import { useCatalogStore } from '../../store/useCatalogStore'
 import { useAuthStore } from '../../store/useAuthStore'
 import { notifySuccess } from '../../store/useToastStore'
 import { TextField, TextAreaField } from '../../components/ui/Field'
-import ConfirmDialog from '../../components/ui/ConfirmDialog'
 
 export default function Settings() {
   usePageHeader('Configurações', 'Dados gerais da marca, contato e preferências do sistema')
 
   const settings = useCatalogStore((s) => s.settings)
   const updateSettings = useCatalogStore((s) => s.updateSettings)
-  const resetToSeed = useCatalogStore((s) => s.resetToSeed)
   const currentUser = useAuthStore((s) => s.currentUser)
 
   const [form, setForm] = useState(settings)
-  const [confirmReset, setConfirmReset] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  // As configurações chegam da API depois do primeiro render: sem isso o
+  // formulário ficaria preso na forma inicial do seed.
+  useEffect(() => {
+    setForm(settings)
+  }, [settings])
 
   const set = (key, value) => setForm((f) => ({ ...f, [key]: value }))
 
-  const save = (e) => {
+  const save = async (e) => {
     e.preventDefault()
-    updateSettings(form)
-    notifySuccess('Configurações salvas com sucesso.')
+    setSaving(true)
+    try {
+      await updateSettings(form)
+      notifySuccess('Configurações salvas com sucesso.')
+    } catch {
+      // O store já mostra o toast de erro.
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -56,7 +67,13 @@ export default function Settings() {
           <div className="card-surface space-y-4 p-6">
             <h3 className="font-display text-lg text-espresso-800">Meu perfil</h3>
             <div className="flex items-center gap-3">
-              <img src={currentUser?.avatar} alt="" className="h-14 w-14 rounded-full object-cover" />
+              {currentUser?.avatar ? (
+                <img src={currentUser.avatar} alt="" className="h-14 w-14 rounded-full object-cover" />
+              ) : (
+                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-espresso-700/8 font-semibold text-espresso-600">
+                  {currentUser?.name?.slice(0, 2).toUpperCase()}
+                </span>
+              )}
               <div>
                 <p className="text-sm font-semibold text-espresso-800">{currentUser?.name}</p>
                 <p className="text-xs text-espresso-400">{currentUser?.email}</p>
@@ -66,30 +83,11 @@ export default function Settings() {
             <p className="text-xs text-espresso-400">Para alterar seus dados de acesso, procure a administração em Usuários.</p>
           </div>
 
-          <button type="submit" className="btn-primary btn-md w-full">
-            <Save size={16} /> Salvar configurações
+          <button type="submit" disabled={saving} className="btn-primary btn-md w-full disabled:opacity-60">
+            <Save size={16} /> {saving ? 'Salvando...' : 'Salvar configurações'}
           </button>
-
-          <div className="card-surface space-y-3 border-terracotta-600/15 p-6">
-            <h3 className="font-display text-base text-espresso-800">Zona de manutenção</h3>
-            <p className="text-xs leading-relaxed text-espresso-400">
-              Restaura produtos, categorias, depoimentos e textos para os dados de demonstração original.
-            </p>
-            <button type="button" onClick={() => setConfirmReset(true)} className="btn-secondary btn-sm w-full text-terracotta-600">
-              <RotateCcw size={14} /> Restaurar dados de exemplo
-            </button>
-          </div>
         </div>
       </form>
-
-      <ConfirmDialog
-        open={confirmReset}
-        onClose={() => setConfirmReset(false)}
-        title="Restaurar dados de exemplo?"
-        description="Todos os produtos, categorias, depoimentos e conteúdos personalizados serão substituídos pelos dados originais de demonstração."
-        confirmLabel="Restaurar"
-        onConfirm={() => { resetToSeed(); notifySuccess('Dados restaurados para o padrão de demonstração.') }}
-      />
     </div>
   )
 }

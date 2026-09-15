@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Menu, X, ShoppingBag } from 'lucide-react'
+import { Menu, X, ShoppingBag, ShoppingCart } from 'lucide-react'
 import { useCatalogStore } from '../../store/useCatalogStore'
+import { useCartStore } from '../../store/useCartStore'
 import Logo from '../ui/Logo'
 import { scrollToHash } from './ScrollToHash'
 import clsx from 'clsx'
@@ -22,10 +23,29 @@ function isLinkActive(link, pathname, hash) {
   return false
 }
 
+function CartLink({ count }) {
+  return (
+    <Link
+      to="/carrinho"
+      className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white/80 text-espresso-700 shadow-soft ring-1 ring-espresso-700/10 transition hover:bg-white"
+      aria-label={count > 0 ? `Carrinho com ${count} ${count === 1 ? 'item' : 'itens'}` : 'Carrinho vazio'}
+    >
+      <ShoppingCart size={19} />
+      {count > 0 && (
+        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-terracotta-500 px-1 text-[0.6875rem] font-semibold text-white">
+          {count > 9 ? '9+' : count}
+        </span>
+      )}
+    </Link>
+  )
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const settings = useCatalogStore((s) => s.settings)
+  // Subscreve nos itens (e não em count()) para o badge re-renderizar de verdade.
+  const cartCount = useCartStore((s) => s.items.reduce((sum, i) => sum + i.quantity, 0))
   const location = useLocation()
   const navigate = useNavigate()
   const hash = location.hash.replace('#', '')
@@ -123,20 +143,24 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center justify-self-end gap-2.5 lg:flex">
+          <CartLink count={cartCount} />
           <Link to="/loja" className="btn-primary btn-sm">
             <ShoppingBag size={15} /> Ver coleção
           </Link>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          className="flex h-11 w-11 items-center justify-center justify-self-end rounded-full bg-white/80 text-espresso-700 shadow-soft ring-1 ring-espresso-700/10 transition hover:bg-white lg:hidden"
-          aria-label={open ? 'Fechar menu' : 'Abrir menu'}
-          aria-expanded={open}
-        >
-          {open ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        <div className="flex items-center gap-2 justify-self-end lg:hidden">
+          <CartLink count={cartCount} />
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/80 text-espresso-700 shadow-soft ring-1 ring-espresso-700/10 transition hover:bg-white"
+            aria-label={open ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={open}
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </nav>
 
       <div
@@ -162,7 +186,10 @@ export default function Navbar() {
               </Link>
             )
           })}
-          <Link to="/loja" className="btn-primary btn-md mt-3 w-full">
+          <Link to="/carrinho" className="btn-secondary btn-md mt-3 w-full">
+            <ShoppingCart size={16} /> Carrinho{cartCount > 0 ? ` (${cartCount})` : ''}
+          </Link>
+          <Link to="/loja" className="btn-primary btn-md w-full">
             <ShoppingBag size={16} /> Ver coleção
           </Link>
         </div>

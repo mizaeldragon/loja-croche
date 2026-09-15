@@ -11,7 +11,7 @@ export default function Login() {
   const login = useAuthStore((s) => s.login)
   const navigate = useNavigate()
 
-  const [email, setEmail] = useState('admin@linhaeponto.com')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
@@ -19,20 +19,20 @@ export default function Login() {
 
   if (isAuthenticated) return <Navigate to="/admin" replace />
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)
-    setTimeout(() => {
-      const result = login(email, password)
-      setLoading(false)
-      if (result.ok) {
-        notifySuccess('Bem-vinda de volta!')
-        navigate('/admin')
-      } else {
-        setError(result.message)
-      }
-    }, 500)
+
+    const result = await login(email, password)
+    setLoading(false)
+
+    if (result.ok) {
+      notifySuccess('Bem-vinda de volta!')
+      navigate('/admin')
+    } else {
+      setError(result.message)
+    }
   }
 
   return (
@@ -101,10 +101,6 @@ export default function Login() {
             {loading ? 'Entrando...' : <>Entrar <ArrowRight size={16} /></>}
           </button>
 
-          <div className="rounded-xl bg-sand-50 px-4 py-3 text-xs leading-relaxed text-espresso-500">
-            <strong className="text-espresso-700">Acesso de demonstração:</strong><br />
-            admin@linhaeponto.com · senha: crochedelicado
-          </div>
         </form>
       </div>
       <Toaster />

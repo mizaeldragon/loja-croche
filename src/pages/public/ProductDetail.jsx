@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { ChevronLeft, ShieldCheck, Truck, Sparkles, MessageCircle, Check } from 'lucide-react'
+import { ChevronLeft, ShieldCheck, Truck, Sparkles, MessageCircle, Check, ShoppingBag } from 'lucide-react'
 import { useCatalogStore } from '../../store/useCatalogStore'
+import { useCartStore } from '../../store/useCartStore'
+import ShippingCalculator from '../../components/public/ShippingCalculator'
 import { formatCurrency } from '../../lib/format'
 import ProductCard from '../../components/public/ProductCard'
 import EmptyState from '../../components/ui/EmptyState'
@@ -14,9 +16,14 @@ export default function ProductDetail() {
   const settings = useCatalogStore((s) => s.settings)
   const product = products.find((p) => p.slug === slug && p.status === 'published')
 
+  const addItem = useCartStore((s) => s.addItem)
+  const zip = useCartStore((s) => s.zip)
+  const setZip = useCartStore((s) => s.setZip)
+
   const [activeImage, setActiveImage] = useState(0)
   const [color, setColor] = useState('')
   const [size, setSize] = useState('')
+  const [added, setAdded] = useState(false)
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
@@ -47,6 +54,18 @@ export default function ProductDetail() {
   }
 
   const hasPromo = product.promoPrice && product.promoPrice < product.price
+  const outOfStock = product.stock === 0
+
+  function handleAddToCart() {
+    addItem({
+      product: { ...product, price: hasPromo ? product.promoPrice : product.price },
+      color,
+      size,
+    })
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
+  }
+
   const related = products
     .filter((p) => p.category === product.category && p.id !== product.id && p.status === 'published')
     .slice(0, 4)
@@ -149,18 +168,42 @@ export default function ProductDetail() {
             )}
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <button
+                onClick={handleAddToCart}
+                disabled={outOfStock}
+                className="btn-primary btn-lg flex-1 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {outOfStock ? (
+                  'Esgotado'
+                ) : added ? (
+                  <>
+                    <Check size={17} /> Adicionado!
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag size={17} /> Adicionar ao carrinho
+                  </>
+                )}
+              </button>
               <a
                 href={`https://wa.me/${settings.whatsapp}?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noreferrer"
-                className="btn-primary btn-lg flex-1"
+                className="btn-secondary btn-lg flex-1"
               >
-                <MessageCircle size={17} /> Comprar agora
-              </a>
-              <a href="#contato" className="btn-secondary btn-lg flex-1">
-                Solicitar orçamento
+                <MessageCircle size={17} /> Falar no WhatsApp
               </a>
             </div>
+
+            {!outOfStock && (
+              <div className="mt-6">
+                <ShippingCalculator
+                  items={[{ productId: product.id, quantity: 1 }]}
+                  zip={zip}
+                  onZipChange={setZip}
+                />
+              </div>
+            )}
 
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-espresso-700/8 pt-6">
               <div className="flex items-center gap-2 text-sm text-espresso-500">

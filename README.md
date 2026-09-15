@@ -11,6 +11,14 @@ npm run dev
 
 Acesse `http://localhost:5173` para a vitrine pública.
 
+O frontend precisa da API rodando. Crie um `.env` na raiz com:
+
+```
+VITE_API_URL=http://localhost:3333
+```
+
+E suba o backend em outro terminal — veja [server/README.md](server/README.md).
+
 Para gerar a build de produção:
 
 ```bash
@@ -22,11 +30,10 @@ npm run preview
 
 Acesse `/admin` (redireciona automaticamente para o login).
 
-- **URL:** `http://localhost:5173/admin/login`
-- **E-mail:** `admin@linhaeponto.com`
-- **Senha:** `crochedelicado`
-
-Também existe um usuário de nível "editor": `editor@linhaeponto.com` / `editor123`.
+O login é autenticado no backend (bcrypt + JWT) contra a tabela `AdminUser`.
+A primeira usuária é criada pelo seed do servidor, a partir das variáveis
+`SEED_ADMIN_EMAIL` e `SEED_ADMIN_PASSWORD`. Não há credencial de demonstração
+no código — usuários adicionais se cadastram pelo próprio painel, em *Usuários*.
 
 ## Estrutura do projeto
 
@@ -46,12 +53,17 @@ src/
 
 ## Persistência de dados
 
-Este projeto não possui backend: todo o catálogo (produtos, categorias, depoimentos, banners, pedidos, usuários) é
-gerenciado com **Zustand + localStorage**, o que permite testar o fluxo completo de CRUD do painel administrativo
-sem necessidade de servidor. Para conectar a uma API real, substitua as actions dentro de `src/store/` por chamadas
-HTTP mantendo a mesma assinatura de funções usada pelos componentes.
+Todo o conteúdo (produtos, categorias, depoimentos, FAQ, banners, textos, pedidos, orçamentos e usuários) vive no
+**Postgres**, acessado pela API em [`server/`](server/README.md). Os stores em `src/store/` são apenas cache de UI:
+carregam via `load()` / `loadAdmin()` e cada ação de escrita faz a chamada HTTP correspondente.
 
-Em "Configurações → Zona de manutenção" é possível restaurar os dados de demonstração originais a qualquer momento.
+O único dado que continua no navegador é o **carrinho** (`useCartStore`), persistido em localStorage de propósito —
+para o cliente não perder os itens ao fechar a aba. Mesmo assim, preço, estoque e frete são sempre recalculados no
+servidor no momento do checkout.
+
+`src/lib/seed.js` continua no repositório com dois papéis: alimentar o banco na primeira carga
+(`npm run seed` no servidor) e servir de forma inicial do estado, para os componentes não quebrarem no primeiro
+render antes da API responder.
 
 ## Funcionalidades
 
