@@ -1,0 +1,299 @@
+// Schema do e-commerce do Ateliê Angel Art.
+// Banco: Postgres (Railway). Valores monetários em Decimal(10,2) — nunca Float.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------- catálogo
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  order       Int       @default(0)
+  products    Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ProductStatus {
+  draft
+  published
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String        @default("")
+  price       Decimal       @db.Decimal(10, 2)
+  // Preço promocional. Quando preenchido e menor que `price`, é o valor cobrado.
+  promoPrice  Decimal?      @db.Decimal(10, 2)
+  status      ProductStatus @default(draft)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  images String[] @default([])
+  colors String[] @default([])
+  sizes  String[] @default([])
+  tags   String[] @default([])
+
+  featured   Boolean @default(false)
+  bestseller Boolean @default(false)
+  isNew      Boolean @default(false)
+  stock      Int     @default(0)
+  order      Int     @default(0)
+
+  // Obrigatórios para o cálculo de frete no Melhor Envio.
+  // Peso em gramas e dimensões em centímetros (a API trabalha nessas unidades).
+  weightGrams Int @default(300)
+  heightCm    Int @default(4)
+  widthCm     Int @default(12)
+  lengthCm    Int @default(17)
+
+  seoTitle       String?
+  seoDescription String?
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, order])
+  @@index([categoryId])
+}
+
+// ---------------------------------------------------------------- pedidos
+
+enum OrderStatus {
+  novo
+  em_andamento
+  enviado
+  concluido
+  cancelado
+}
+
+enum PaymentStatus {
+  pendente
+  pago
+  recusado
+  estornado
+}
+
+model Customer {
+  id       String  @id @default(cuid())
+  name     String
+  email    String
+  phone    String
+  document String? // CPF — exigido pelo Mercado Pago em boleto/PIX
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model Order {
+  id     String @id @default(cuid())
+  number Int    @unique @default(autoincrement())
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  status        OrderStatus   @default(novo)
+  paymentStatus PaymentStatus @default(pendente)
+
+  subtotal     Decimal @db.Decimal(10, 2)
+  shippingCost Decimal @db.Decimal(10, 2)
+  discount     Decimal @default(0) @db.Decimal(10, 2)
+  total        Decimal @db.Decimal(10, 2)
+
+  // Snapshot da opção de frete escolhida no checkout.
+  shippingService  String?
+  shippingCarrier  String?
+  shippingDays     Int?
+  trackingCode     String?
+  melhorEnvioOrder String?
+
+  mpPreferenceId String?
+  mpPaymentId    String?
+  paidAt         DateTime?
+  stockApplied   Boolean   @default(false)
+
+  notes String?
+
+  items   OrderItem[]
+  address ShippingAddress?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([paymentStatus, createdAt])
+  @@index([mpPreferenceId])
+}
+
+// Snapshot do item no momento da compra — nome e preço ficam congelados,
+// para o histórico não mudar quando o produto for editado depois.
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  productName String
+  unitPrice   Decimal @db.Decimal(10, 2)
+  quantity    Int
+  color       String?
+  size        String?
+
+  @@index([orderId])
+}
+
+model ShippingAddress {
+  id      String @id @default(cuid())
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  zip        String // CEP, somente dígitos
+  street     String
+  number     String
+  complement String?
+  district   String
+  city       String
+  state      String // UF
+}
+
+enum QuoteStatus {
+  novo
+  em_andamento
+  respondido
+  fechado
+}
+
+// Pedido de orçamento vindo do formulário da landing page. É outra coisa que
+// um pedido pago: não tem itens, frete nem pagamento — só um contato e o que
+// a pessoa quer. Por isso mora em tabela própria.
+model Quote {
+  id      String      @id @default(cuid())
+  number  Int         @unique @default(autoincrement())
+  name    String
+  // O formulário da landing pede um contato só (e-mail OU telefone), então
+  // os dois são opcionais aqui — a rota exige que ao menos um venha.
+  email   String?
+  phone   String?
+  message String      @default("")
+  status  QuoteStatus @default(novo)
+  notes   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+}
+
+// ---------------------------------------------------------------- admin
+
+enum AdminRole {
+  admin
+  editor
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         AdminRole @default(editor)
+  avatar       String?
+  active       Boolean   @default(true)
+  lastLoginAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------- conteúdo
+
+model Testimonial {
+  id      String  @id @default(cuid())
+  name    String
+  role    String?
+  text    String
+  rating  Int     @default(5)
+  avatar  String?
+  visible Boolean @default(true)
+  order   Int     @default(0)
+
+  createdAt DateTime @default(now())
+}
+
+model Faq {
+  id       String  @id @default(cuid())
+  question String
+  answer   String
+  order    Int     @default(0)
+  visible  Boolean @default(true)
+}
+
+// Conteúdo editorial do site em documento único (id fixo "default").
+// `data` espelha seedSettings e `banners` espelha seedBanners (hero,
+// carousel e promo) — estruturas aninhadas que o painel edita como bloco,
+// então JSON encaixa melhor do que tabela.
+model Settings {
+  id      String @id @default("default")
+  data    Json
+  banners Json   @default("{}")
+
+  updatedAt DateTime @updatedAt
+}
+
+// Credenciais das integrações da LOJA (não da infraestrutura).
+//
+// Ficam no banco, e não no .env, porque quem é dono delas é a lojista: ela
+// precisa poder trocar um token sem depender de quem instalou o sistema e sem
+// um redeploy. Os campos marcados como criptografados guardam AES-256-GCM
+// (ver src/lib/crypto.js) — nunca texto puro, nunca voltam para o navegador.
+model Integration {
+  id String @id @default("default")
+
+  // ---- Mercado Pago ----
+  // Um campo só, de propósito. O Access Token de produção basta: o Checkout
+  // Pro já entrega PIX, débito, crédito e boleto, e a chave de assinatura do
+  // webhook seria redundante (ver src/routes/webhooks.js).
+  mpAccessToken String? // criptografado
+
+  // ---- Melhor Envio ----
+  meToken        String? // criptografado
+  meMode         String  @default("sandbox") // sandbox | production
+  meContactEmail String?
+  shipFromZip    String?
+
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------- infra
+
+// Garante idempotência dos webhooks: o Mercado Pago reenvia a mesma
+// notificação várias vezes e não podemos processar o pagamento duas vezes.
+model WebhookEvent {
+  id         String   @id @default(cuid())
+  provider   String
+  externalId String
+  payload    Json
+  receivedAt DateTime @default(now())
+
+  @@unique([provider, externalId])
+}
