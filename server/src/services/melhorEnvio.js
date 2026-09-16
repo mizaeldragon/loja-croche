@@ -40,12 +40,23 @@ async function melhorEnvioFetch(config, path, options = {}) {
   if (!res.ok) {
     console.error('[melhor-envio] falha', res.status, body)
 
-    // 401 quase sempre é token expirado ou token de sandbox usado em produção
-    // (e vice-versa). Vale dizer isso em vez de um "erro genérico".
+    // 401 e 403 têm causas diferentes e soluções diferentes. Tratar os dois
+    // como "erro genérico" faz a lojista ficar tentando de novo sem saber o
+    // que mudar.
     if (res.status === 401) {
       throw new HttpError(
         502,
         `Token do Melhor Envio recusado (modo: ${config.mode}). Ele pode ter expirado, ou ser de uma conta diferente do modo selecionado.`
+      )
+    }
+
+    // 403 = o token é válido, mas foi gerado sem as permissões necessárias.
+    // No painel do Melhor Envio as permissões são marcadas uma a uma na hora
+    // de gerar, e é fácil gerar sem nenhuma.
+    if (res.status === 403) {
+      throw new HttpError(
+        502,
+        'O token do Melhor Envio não tem permissão para calcular frete. Gere um token novo marcando as permissões de envio (cotação/shipping) e cole aqui.'
       )
     }
 
@@ -109,8 +120,13 @@ export async function quoteShipping({ zip, items }) {
 }
 
 /**
- * Valida as credenciais sem fazer uma venda: consulta os dados da conta.
- * Usado pelo botão "Testar conexão" do painel.
+ * Valida as credenciais fazendo uma cotação de teste.
+ *
+ * Antes isso consultava /api/v2/me, que exige uma permissão DIFERENTE da que
+ * o site usa. Dava para o teste passar e o frete continuar quebrado — ou, como
+ * aconteceu, falhar sem explicar qual permissão faltava. Cotar é o que o site
+ * faz de verdade, então é isso que o teste precisa exercitar. Não custa nada
+ * e não posta nada.
  */
 export async function testShippingCredentials() {
   const config = await getShippingConfig()
@@ -120,9 +136,38 @@ export async function testShippingCredentials() {
     return { ok: false, message: 'Informe o CEP de origem (8 dígitos).' }
   }
 
-  const me = await melhorEnvioFetch(config, '/api/v2/me')
+  const servicos = await melhorEnvioFetch(config, '/api/v2/me/shipment/calculate', {
+    method: 'POST',
+    body: JSON.stringify({
+      from: { postal_code: config.shipFromZip },
+      to: { postal_code: '01310100' }, // Av. Paulista, só para a cotação de teste
+      products: [
+        {
+          id: 'teste',
+          width: 16,
+          height: 4,
+          length: 20,
+          weight: 0.3,
+          insurance_value: 30,
+          quantity: 1,
+        },
+      ],
+    }),
+  })
+
+  const disponiveis = (Array.isArray(servicos) ? servicos : []).filter((s) => !s.error && s.price)
+
+  if (!disponiveis.length) {
+    return {
+      ok: false,
+      message:
+        'O token funciona, mas nenhuma transportadora atendeu a cotação de teste. Confira se o CEP de origem está correto.',
+    }
+  }
+
+  const nomes = disponiveis.slice(0, 3).map((s) => s.name).join(', ')
   return {
     ok: true,
-    message: `Conectado como ${me.firstname ?? me.email ?? 'conta Melhor Envio'} (modo ${config.mode}).`,
+    message: `Conectado! ${disponiveis.length} opções de envio disponíveis (${nomes}...).`,
   }
 }
