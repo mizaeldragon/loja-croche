@@ -131,6 +131,14 @@ model Order {
   paidAt         DateTime?
   stockApplied   Boolean   @default(false)
 
+  // Resultado real da cobrança, preenchido pelo webhook a partir da API do
+  // Mercado Pago. `total` é o que o pedido valia; `netReceived` é o que de
+  // fato caiu na conta depois da taxa. Sem isso o painel mostraria receita
+  // que não existe — no parcelamento com juros do lojista a diferença é real.
+  installments Int?
+  netReceived  Decimal? @db.Decimal(10, 2)
+  mpFee        Decimal? @db.Decimal(10, 2)
+
   notes String?
 
   items   OrderItem[]

@@ -1,7 +1,8 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { asyncRoute, parse } from '../lib/http.js'
+import { asyncRoute, badRequest, parse } from '../lib/http.js'
 import { cartSchema, resolveCart } from '../services/cart.js'
+import { simularParcelas } from '../services/installments.js'
 import { normalizeZip, quoteShipping } from '../services/melhorEnvio.js'
 
 export const shippingRouter = Router()
@@ -46,5 +47,24 @@ shippingRouter.get(
       city: data.localidade ?? '',
       state: data.uf ?? '',
     })
+  })
+)
+
+// GET /api/parcelas?valores=20,28,360 — simulação de parcelamento.
+// Fica aqui junto do frete por ser da mesma natureza: informação que a
+// vitrine consulta antes de existir pedido.
+shippingRouter.get(
+  '/parcelas',
+  asyncRoute(async (req, res) => {
+    const bruto = String(req.query.valores ?? '')
+    const valores = bruto
+      .split(',')
+      .map((v) => Number(v.trim()))
+      .filter((v) => Number.isFinite(v) && v > 0)
+      .slice(0, 50)
+
+    if (!valores.length) throw badRequest('Informe ao menos um valor em ?valores=')
+
+    res.json(await simularParcelas(valores))
   })
 )

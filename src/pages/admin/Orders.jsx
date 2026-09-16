@@ -60,6 +60,17 @@ function OrderCard({ order, onStatusChange, onTrackingSave }) {
           <p className="text-xs text-espresso-400">
             {formatCurrency(order.subtotal)} + {formatCurrency(order.shippingCost)} de frete
           </p>
+          {order.installments > 1 && (
+            <p className="text-xs text-espresso-400">
+              {order.installments}x no cartão
+            </p>
+          )}
+          {order.netReceived != null && (
+            <p className="text-xs font-medium text-emerald-700">
+              {formatCurrency(order.netReceived)} líquidos
+              {order.mpFee != null && ` · ${formatCurrency(order.mpFee)} de taxa`}
+            </p>
+          )}
         </div>
       </div>
 

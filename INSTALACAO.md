@@ -144,6 +144,31 @@ Antes de divulgar a loja, faça **uma compra de verdade de valor baixo** para ve
 o fluxo inteiro funcionando: pagamento, pedido aparecendo como *Pago*, estoque
 baixando. Depois é só estornar pelo Mercado Pago.
 
+### Parcelamento no cartão (decida antes de divulgar a loja)
+
+Ainda no painel do Mercado Pago, em **Configurações de pagamento**, defina duas
+coisas. Elas não ficam no nosso painel de propósito: são decisão de negócio da
+loja e mudam com o tempo.
+
+**1. Até quantas parcelas aceitar.**
+
+**2. Quem paga os juros:**
+
+- **Juros por conta do comprador** — ele vê `6x de R$ 71,90 (total R$ 431,40)`
+  e a loja recebe o valor cheio do pedido.
+- **Juros por conta da loja** — ele vê `6x de R$ 63,33 sem juros`, paga o valor
+  exato, e a loja recebe menos. Converte mais, mas o custo sai do seu bolso.
+
+> Não existe escolha certa: vender mais com margem menor, ou margem cheia com
+> menos conversão. O que não pode é não decidir e descobrir na primeira fatura.
+
+O site mostra as parcelas na vitrine consultando o Mercado Pago, então **o que
+aparece na loja é sempre o que você configurou aqui** — mudou no Mercado Pago,
+muda no site sozinho, sem mexer em código.
+
+E como o pedido guarda quanto realmente entrou depois da taxa, o painel mostra
+**vendido** e **líquido** separados. É o líquido que existe na conta.
+
 ### Melhor Envio
 
 1. Crie a conta em [melhorenvio.com.br](https://melhorenvio.com.br) — de novo,
@@ -169,6 +194,7 @@ baixando. Depois é só estornar pelo Mercado Pago.
 
 - [ ] Trocar a senha do painel (**Usuários → editar**).
 - [ ] Access Token do Mercado Pago colado e conectado, e o webhook cadastrado.
+- [ ] Parcelamento definido no Mercado Pago: teto de parcelas e quem paga os juros.
 - [ ] Uma compra de verdade de valor baixo, do carrinho ao "pagamento
       confirmado", depois estornada.
 - [ ] Conferir que o pedido apareceu em **Pedidos** com status **Pago**.

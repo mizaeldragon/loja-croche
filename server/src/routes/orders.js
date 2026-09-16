@@ -77,6 +77,10 @@ const serialize = (o) => ({
   shippingCost: Number(o.shippingCost),
   discount: Number(o.discount),
   total: Number(o.total),
+  // Decimal do Prisma vira number; null continua null, para o painel saber
+  // a diferença entre "recebeu zero" e "ainda não sabemos".
+  netReceived: o.netReceived == null ? null : Number(o.netReceived),
+  mpFee: o.mpFee == null ? null : Number(o.mpFee),
   items: o.items?.map((i) => ({ ...i, unitPrice: Number(i.unitPrice) })),
 })
 
@@ -144,22 +148,36 @@ ordersRouter.get(
   '/admin/metricas',
   requireAuth,
   asyncRoute(async (_req, res) => {
-    const [produtos, publicados, pedidos, pagos, faturamento, semEstoque] = await Promise.all([
+    const [produtos, publicados, pedidos, pagos, valores, semEstoque] = await Promise.all([
       prisma.product.count(),
       prisma.product.count({ where: { status: 'published' } }),
       prisma.order.count(),
       prisma.order.count({ where: { paymentStatus: 'pago' } }),
-      prisma.order.aggregate({ _sum: { total: true }, where: { paymentStatus: 'pago' } }),
+      prisma.order.aggregate({
+        _sum: { total: true, netReceived: true, mpFee: true },
+        where: { paymentStatus: 'pago' },
+      }),
       prisma.product.count({ where: { stock: 0, status: 'published' } }),
     ])
+
+    const vendido = Number(valores._sum.total ?? 0)
+    const recebido = Number(valores._sum.netReceived ?? 0)
 
     res.json({
       produtos,
       publicados,
       pedidos,
       pagos,
-      faturamento: Number(faturamento._sum.total ?? 0),
       semEstoque,
+      // Vendido = soma dos pedidos pagos. Recebido = o que sobrou depois da
+      // taxa do Mercado Pago. São números diferentes, e confundir os dois faz
+      // a lojista planejar em cima de dinheiro que não existe.
+      vendido,
+      recebido,
+      taxas: Number(valores._sum.mpFee ?? 0),
+      // Pedidos antigos (ou pagos por fora) não têm líquido registrado;
+      // nesse caso o painel não deve fingir que sabe.
+      recebidoParcial: recebido > 0 && recebido < vendido * 0.5,
     })
   })
 )

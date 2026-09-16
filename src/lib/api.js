@@ -68,6 +68,9 @@ export const api = {
 
   // --- frete e checkout ---
   buscarCep: (cep) => request(`/api/cep/${cep.replace(/\D/g, '')}`),
+  // Simulação de parcelamento. Os valores vêm do Mercado Pago, nunca de uma
+  // conta nossa — ver server/src/services/installments.js.
+  parcelas: (valores) => request(`/api/parcelas?valores=${valores.join(',')}`),
   calcularFrete: (zip, items) => request('/api/frete', { method: 'POST', body: { zip, items } }),
   criarCheckout: (payload) => request('/api/checkout', { method: 'POST', body: payload }),
   statusPedido: (id) => request(`/api/pedidos/${id}/status`),

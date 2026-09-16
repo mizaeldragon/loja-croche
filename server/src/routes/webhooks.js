@@ -6,6 +6,37 @@ import { getPayment, mapPaymentStatus } from '../services/mercadoPago.js'
 export const webhooksRouter = Router()
 
 /**
+ * Extrai do pagamento o que realmente aconteceu com o dinheiro.
+ *
+ * O total do pedido é o que ele valia; o líquido é o que sobrou depois da
+ * taxa do Mercado Pago. No parcelamento com juros por conta da lojista, os
+ * dois são diferentes — e sem guardar isso o painel mostraria receita que
+ * nunca chegou na conta.
+ *
+ * Tudo aqui é defensivo: campo ausente vira null em vez de derrubar o
+ * webhook, que é o que confirma a venda.
+ */
+function extrairResultadoFinanceiro(payment) {
+  const dados = {}
+
+  const parcelas = Number(payment?.installments)
+  if (Number.isFinite(parcelas) && parcelas > 0) dados.installments = parcelas
+
+  const liquido = Number(payment?.transaction_details?.net_received_amount)
+  if (Number.isFinite(liquido) && liquido > 0) dados.netReceived = liquido
+
+  // fee_details lista cada taxa e quem pagou. Só interessa o que saiu do
+  // bolso de quem vende (collector).
+  const taxas = Array.isArray(payment?.fee_details) ? payment.fee_details : []
+  const total = taxas
+    .filter((f) => f?.fee_payer === 'collector')
+    .reduce((soma, f) => soma + (Number(f.amount) || 0), 0)
+  if (total > 0) dados.mpFee = Math.round(total * 100) / 100
+
+  return dados
+}
+
+/**
  * POST /api/webhooks/mercadopago
  *
  * Confirmação de pagamento. Duas garantias importantes aqui:
@@ -75,6 +106,7 @@ webhooksRouter.post(
             mpPaymentId: String(payment.id),
             paidAt: paymentStatus === 'pago' ? new Date() : null,
             status: paymentStatus === 'recusado' ? 'cancelado' : order.status,
+            ...extrairResultadoFinanceiro(payment),
           },
         })
 

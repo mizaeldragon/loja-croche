@@ -4,6 +4,8 @@ import { ChevronLeft, ShieldCheck, Truck, Sparkles, MessageCircle, Check, Shoppi
 import { useCatalogStore } from '../../store/useCatalogStore'
 import { useCartStore } from '../../store/useCartStore'
 import ShippingCalculator from '../../components/public/ShippingCalculator'
+import Parcelamento from '../../components/public/Parcelamento'
+import { useParcelas } from '../../lib/useParcelas'
 import { formatCurrency } from '../../lib/format'
 import ProductCard from '../../components/public/ProductCard'
 import EmptyState from '../../components/ui/EmptyState'
@@ -24,6 +26,15 @@ export default function ProductDetail() {
   const [color, setColor] = useState('')
   const [size, setSize] = useState('')
   const [added, setAdded] = useState(false)
+
+  // Precisa ficar acima do early return de "produto nao encontrado":
+  // hook nao pode ser chamado condicionalmente.
+  const precoEfetivo = product
+    ? product.promoPrice && product.promoPrice < product.price
+      ? product.promoPrice
+      : product.price
+    : 0
+  const parcelas = useParcelas([precoEfetivo])
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
@@ -124,6 +135,8 @@ export default function ProductDetail() {
                 <span className="font-display text-3xl text-espresso-800">{formatCurrency(product.price)}</span>
               )}
             </div>
+
+            <Parcelamento dados={parcelas(precoEfetivo)} className="mt-3" />
 
             <p className="mt-6 max-w-lg text-[0.95rem] leading-relaxed text-espresso-500">{product.description}</p>
 

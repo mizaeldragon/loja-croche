@@ -15,9 +15,14 @@ export default function Dashboard() {
   const quotes = useCatalogStore((s) => s.quotes)
 
   const published = products.filter((p) => p.status === 'published')
-  const faturamento = orders
-    .filter((o) => o.paymentStatus === 'pago')
-    .reduce((sum, o) => sum + o.total, 0)
+  const pagos = orders.filter((o) => o.paymentStatus === 'pago')
+  // Vendido != recebido. A taxa do Mercado Pago sai do meio, e no
+  // parcelamento com juros por conta da loja a diferença é grande.
+  const vendido = pagos.reduce((sum, o) => sum + o.total, 0)
+  const recebido = pagos.reduce((sum, o) => sum + (o.netReceived ?? 0), 0)
+  // Pedidos antigos podem não ter o líquido registrado; nesse caso não
+  // fingimos saber e mostramos apenas o vendido.
+  const temLiquido = pagos.some((o) => o.netReceived != null)
   const featured = products.filter((p) => p.featured)
   const lowStock = products.filter((p) => p.stock <= 3 && p.status === 'published')
   const recentOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5)
@@ -33,7 +38,11 @@ export default function Dashboard() {
           icon={ClipboardList}
           label="Pedidos"
           value={orders.length}
-          trend={`${formatCurrency(faturamento)} recebidos · ${quotes.length} orçamentos`}
+          trend={
+            temLiquido
+              ? `${formatCurrency(recebido)} líquidos de ${formatCurrency(vendido)} vendidos`
+              : `${formatCurrency(vendido)} vendidos · ${quotes.length} orçamentos`
+          }
         />
       </div>
 

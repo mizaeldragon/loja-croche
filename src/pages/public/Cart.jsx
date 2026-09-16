@@ -4,6 +4,8 @@ import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 import { useCartStore } from '../../store/useCartStore'
 import { formatCurrency } from '../../lib/format'
 import ShippingCalculator from '../../components/public/ShippingCalculator'
+import Parcelamento from '../../components/public/Parcelamento'
+import { useParcelas } from '../../lib/useParcelas'
 import EmptyState from '../../components/ui/EmptyState'
 
 export default function Cart() {
@@ -17,6 +19,10 @@ export default function Cart() {
 
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
   const total = subtotal + (shipping?.price ?? 0)
+
+  // Simula sobre o total já com frete: é exatamente o valor que vai para o
+  // Mercado Pago, então o que aparece aqui bate com a tela de pagamento.
+  const parcelas = useParcelas([total])
 
   if (!items.length) {
     return (
@@ -132,6 +138,8 @@ export default function Cart() {
                   <dd>{formatCurrency(total)}</dd>
                 </div>
               </dl>
+
+              <Parcelamento dados={parcelas(total)} className="mt-3" />
 
               <button
                 onClick={() => navigate('/checkout')}
