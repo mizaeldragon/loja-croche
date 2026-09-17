@@ -11,16 +11,23 @@ export default function Topbar({ title, subtitle, onMenuClick }) {
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between gap-4 bg-white px-5 py-4 sm:px-8">
-      <div className="flex items-center gap-3">
+      {/* min-w-0 deixa o bloco encolher: sem ele, uma palavra longa no
+          subtítulo define a largura mínima e empurra o layout inteiro,
+          criando rolagem horizontal no celular. */}
+      <div className="flex min-w-0 items-center gap-3">
         <button
           onClick={onMenuClick}
           className="flex h-9 w-9 items-center justify-center rounded-lg text-espresso-600 hover:bg-sand-100 lg:hidden"
         >
           <Menu size={19} />
         </button>
-        <div>
-          <h1 className="font-display text-xl text-espresso-800 sm:text-2xl">{title}</h1>
-          {subtitle && <p className="text-xs text-espresso-400 sm:text-sm">{subtitle}</p>}
+        <div className="min-w-0">
+          <h1 className="truncate font-display text-xl text-espresso-800 sm:text-2xl">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="line-clamp-2 text-xs text-espresso-400 sm:text-sm">{subtitle}</p>
+          )}
         </div>
       </div>
 
