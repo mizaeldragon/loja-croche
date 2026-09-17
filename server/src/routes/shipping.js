@@ -3,7 +3,8 @@ import { z } from 'zod'
 import { asyncRoute, badRequest, parse } from '../lib/http.js'
 import { cartSchema, resolveCart } from '../services/cart.js'
 import { simularParcelas } from '../services/installments.js'
-import { normalizeZip, quoteShipping } from '../services/melhorEnvio.js'
+import { normalizeZip } from '../services/melhorEnvio.js'
+import { getShippingOptions } from '../services/shippingOptions.js'
 
 export const shippingRouter = Router()
 
@@ -19,7 +20,7 @@ shippingRouter.post(
     const { zip, items } = parse(quoteSchema, req.body)
     const { items: resolved, subtotalCents } = await resolveCart(items)
 
-    const options = await quoteShipping({ zip, items: resolved })
+    const options = await getShippingOptions({ zip, items: resolved })
 
     res.json({
       cep: normalizeZip(zip),

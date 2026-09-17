@@ -181,12 +181,41 @@ E como o pedido guarda quanto realmente entrou depois da taxa, o painel mostra
 
 3. Em **Integrações → Tokens**, gere um token de API e cole no painel.
 
+   > **Marque as permissões de envio ao gerar o token.** É o erro mais comum:
+   > o Melhor Envio deixa gerar um token sem nenhuma permissão, e aí toda
+   > cotação é recusada. Permissão é definida na criação — um token sem ela não
+   > tem conserto, tem que gerar outro.
+
    > **Anote a data de validade.** Os tokens expiram. Quando expirar, o cálculo
    > de frete some do site sem aviso — é só gerar outro e colar de novo.
 
 4. Preencha o **CEP de origem** (de onde as peças são postadas) e o **e-mail de
    contato** (o Melhor Envio exige para identificar a loja).
 5. Clique em **Testar conexão**.
+
+### Entrega na própria cidade
+
+Transportadora para a mesma cidade é cara e lenta: um produto de R$ 20 sai por
+R$ 12,43 de frete em 3 dias, sendo que você entrega em mãos no mesmo dia. Sem
+uma opção local, o cliente da cidade abandona o carrinho e fecha pelo WhatsApp
+— a venda acontece, mas some do sistema: o estoque não baixa e o pedido não
+entra no painel.
+
+No painel, em **Integrações → Entrega na sua cidade**, você ativa duas opções:
+
+- **Retirada** — frete grátis, e você combina o local e o horário depois.
+- **Entrega na cidade** — você define o valor e o prazo, e leva ou manda por
+  motoboy.
+
+As duas aparecem **só para quem mora na sua cidade**, acima das transportadoras.
+Quem é de fora continua vendo apenas Correios e transportadoras.
+
+> A cidade atendida **não é digitada**: sai do CEP de origem que você já
+> preencheu. Assim não há risco de um acento ou um typo fazer as opções
+> sumirem sem explicação. Mudou de endereço, troque o CEP e salve.
+
+Pedidos com retirada aparecem no painel marcados com **"Não postar"**, e sem
+campo de rastreio — porque não existe postagem.
 
 ---
 
@@ -195,6 +224,7 @@ E como o pedido guarda quanto realmente entrou depois da taxa, o painel mostra
 - [ ] Trocar a senha do painel (**Usuários → editar**).
 - [ ] Access Token do Mercado Pago colado e conectado, e o webhook cadastrado.
 - [ ] Parcelamento definido no Mercado Pago: teto de parcelas e quem paga os juros.
+- [ ] Entrega local decidida: retirada e/ou entrega na cidade, com valor e prazo.
 - [ ] Uma compra de verdade de valor baixo, do carrinho ao "pagamento
       confirmado", depois estornada.
 - [ ] Conferir que o pedido apareceu em **Pedidos** com status **Pago**.

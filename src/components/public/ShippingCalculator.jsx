@@ -3,6 +3,13 @@ import { Loader2, Truck } from 'lucide-react'
 import { api } from '../../lib/api'
 import { formatCurrency } from '../../lib/format'
 
+// Entregas da própria loja vêm primeiro: para quem é da cidade, são mais
+// baratas e mais rápidas que qualquer transportadora.
+const GRUPOS = [
+  { tipos: ['retirada', 'local'], titulo: 'Entrega pela loja' },
+  { tipos: ['transportadora'], titulo: 'Transportadoras' },
+]
+
 const maskCep = (value) =>
   value
     .replace(/\D/g, '')
@@ -71,34 +78,57 @@ export default function ShippingCalculator({ items, onSelect, selected, zip, onZ
       {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
       {options?.length > 0 && (
-        <ul className="mt-4 space-y-2">
-          {options.map((opt) => {
-            const isSelected = selected?.id === opt.id
+        <div className="mt-4 space-y-4">
+          {GRUPOS.map(({ tipos, titulo }) => {
+            const doGrupo = options.filter((o) => tipos.includes(o.tipo))
+            if (!doGrupo.length) return null
+
             return (
-              <li key={opt.id}>
-                <button
-                  type="button"
-                  onClick={() => onSelect?.(opt)}
-                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
-                    isSelected
-                      ? 'border-terracotta-500 bg-terracotta-400/10'
-                      : 'border-espresso-700/12 bg-white hover:border-espresso-700/30'
-                  }`}
-                >
-                  <span>
-                    <span className="block text-sm font-medium text-espresso-800">{opt.carrier}</span>
-                    <span className="block text-xs text-espresso-500">
-                      {opt.days} {opt.days === 1 ? 'dia útil' : 'dias úteis'}
-                    </span>
-                  </span>
-                  <span className="font-display text-base text-espresso-800">
-                    {formatCurrency(opt.price)}
-                  </span>
-                </button>
-              </li>
+              <div key={titulo}>
+                <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-wide text-espresso-400">
+                  {titulo}
+                </p>
+                <ul className="space-y-2">
+                  {doGrupo.map((opt) => {
+                    const isSelected = selected?.id === opt.id
+                    const gratis = opt.price === 0
+                    return (
+                      <li key={opt.id}>
+                        <button
+                          type="button"
+                          onClick={() => onSelect?.(opt)}
+                          className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
+                            isSelected
+                              ? 'border-terracotta-500 bg-terracotta-400/10'
+                              : 'border-espresso-700/12 bg-white hover:border-espresso-700/30'
+                          }`}
+                        >
+                          <span>
+                            <span className="block text-sm font-medium text-espresso-800">
+                              {opt.carrier}
+                            </span>
+                            <span className="block text-xs text-espresso-500">
+                              {opt.tipo === 'retirada'
+                                ? 'Você combina o horário depois da compra'
+                                : `${opt.days} ${opt.days === 1 ? 'dia útil' : 'dias úteis'}`}
+                            </span>
+                          </span>
+                          <span
+                            className={`font-display text-base ${
+                              gratis ? 'text-emerald-700' : 'text-espresso-800'
+                            }`}
+                          >
+                            {gratis ? 'Grátis' : formatCurrency(opt.price)}
+                          </span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
             )
           })}
-        </ul>
+        </div>
       )}
 
       <p className="mt-3 text-xs text-espresso-400">

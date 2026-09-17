@@ -109,6 +109,7 @@ export async function quoteShipping({ zip, items }) {
     .filter((s) => !s.error && s.price)
     .map((s) => ({
       id: String(s.id),
+      tipo: 'transportadora',
       name: s.name,
       company: s.company?.name ?? '',
       carrier: [s.company?.name, s.name].filter(Boolean).join(' '),

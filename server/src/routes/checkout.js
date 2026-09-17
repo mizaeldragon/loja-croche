@@ -4,7 +4,8 @@ import { prisma } from '../lib/prisma.js'
 import { asyncRoute, badRequest, parse } from '../lib/http.js'
 import { fromCents, toCents } from '../lib/money.js'
 import { cartSchema, resolveCart } from '../services/cart.js'
-import { normalizeZip, quoteShipping } from '../services/melhorEnvio.js'
+import { normalizeZip } from '../services/melhorEnvio.js'
+import { getShippingOptions } from '../services/shippingOptions.js'
 import { createPreference } from '../services/mercadoPago.js'
 
 export const checkoutRouter = Router()
@@ -21,14 +22,17 @@ const checkoutSchema = z.object({
       .refine((v) => v.length === 0 || v.length === 11, 'CPF inválido')
       .optional(),
   }),
+  // Só o CEP é sempre obrigatório: ele define quais entregas estão disponíveis.
+  // Os demais campos são exigidos conforme o tipo escolhido — na retirada não
+  // existe endereço de entrega, e pedi-lo seria atrito à toa.
   address: z.object({
     zip: z.string().min(8).max(9),
-    street: z.string().min(3).max(160),
-    number: z.string().min(1).max(20),
+    street: z.string().max(160).optional(),
+    number: z.string().max(20).optional(),
     complement: z.string().max(80).optional(),
-    district: z.string().min(2).max(80),
-    city: z.string().min(2).max(80),
-    state: z.string().length(2, 'UF deve ter 2 letras'),
+    district: z.string().max(80).optional(),
+    city: z.string().max(80).optional(),
+    state: z.string().max(2).optional(),
   }),
   // Só o ID do serviço: o preço é recotado aqui no servidor.
   shippingOptionId: z.string().min(1, 'Escolha uma opção de entrega'),
@@ -45,12 +49,26 @@ checkoutRouter.post(
 
     // 2. Recotamos o frete e usamos o valor da nossa cotação. O cliente
     //    escolhe o serviço; quem define o preço é o Melhor Envio.
-    const options = await quoteShipping({ zip: data.address.zip, items })
+    const options = await getShippingOptions({ zip: data.address.zip, items })
     const chosen = options.find((o) => o.id === data.shippingOptionId)
     if (!chosen) {
       throw badRequest('Opção de entrega indisponível — recalcule o frete', {
         disponiveis: options.map((o) => o.id),
       })
+    }
+
+    // Retirada não tem endereço de entrega; qualquer outra forma tem.
+    const precisaEndereco = chosen.tipo !== 'retirada'
+    if (precisaEndereco) {
+      const faltando = ['street', 'number', 'district', 'city', 'state'].filter(
+        (c) => !data.address[c]
+      )
+      if (faltando.length) {
+        throw badRequest(
+          'Endereço incompleto para esta forma de entrega',
+          faltando.map((c) => ({ campo: `address.${c}`, erro: 'Campo obrigatório' }))
+        )
+      }
     }
 
     const shippingCents = toCents(chosen.price)
@@ -73,6 +91,7 @@ checkoutRouter.post(
           subtotal: fromCents(subtotalCents),
           shippingCost: fromCents(shippingCents),
           total: fromCents(totalCents),
+          shippingType: chosen.tipo,
           shippingService: chosen.name,
           shippingCarrier: chosen.carrier,
           shippingDays: chosen.days,
@@ -86,17 +105,21 @@ checkoutRouter.post(
               size: i.size,
             })),
           },
-          address: {
-            create: {
-              zip: normalizeZip(data.address.zip),
-              street: data.address.street,
-              number: data.address.number,
-              complement: data.address.complement || null,
-              district: data.address.district,
-              city: data.address.city,
-              state: data.address.state.toUpperCase(),
-            },
-          },
+          ...(precisaEndereco
+            ? {
+                address: {
+                  create: {
+                    zip: normalizeZip(data.address.zip),
+                    street: data.address.street,
+                    number: data.address.number,
+                    complement: data.address.complement || null,
+                    district: data.address.district,
+                    city: data.address.city,
+                    state: data.address.state.toUpperCase(),
+                  },
+                },
+              }
+            : {}),
         },
         include: { items: true, customer: true },
       })

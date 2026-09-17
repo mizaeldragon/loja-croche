@@ -1,8 +1,14 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { asyncRoute, parse } from '../lib/http.js'
+import { asyncRoute, badRequest, parse } from '../lib/http.js'
 import { requireAdmin, requireAuth } from '../middleware/auth.js'
 import { getStatus, saveConfig } from '../services/integrations.js'
+import {
+  cidadeAtendida,
+  getDeliverySettings,
+  limparCacheCidade,
+  saveDeliverySettings,
+} from '../services/localDelivery.js'
 import { testShippingCredentials } from '../services/melhorEnvio.js'
 import { testPaymentCredentials } from '../services/mercadoPago.js'
 
@@ -64,5 +70,59 @@ integrationsRouter.post(
     } catch (err) {
       res.json({ ok: false, message: err.message })
     }
+  })
+)
+
+// ---------------------------------------------------------- entrega local
+// Não é credencial, é política de entrega da loja — por isso só exige sessão,
+// não o papel de administrador.
+
+integrationsRouter.get(
+  '/admin/entrega',
+  requireAuth,
+  asyncRoute(async (_req, res) => {
+    const [cfg, cidade] = await Promise.all([getDeliverySettings(), cidadeAtendida()])
+    res.json({
+      ...cfg,
+      localPrice: Number(cfg.localPrice),
+      // Derivada do CEP de origem — o painel só exibe, ela não digita.
+      cidadeAtendida: cidade,
+    })
+  })
+)
+
+const entregaSchema = z.object({
+  localEnabled: z.boolean().optional(),
+  localLabel: z.string().min(3).max(60).optional(),
+  localPrice: z.number().min(0).max(9999).optional(),
+  localDays: z.number().int().min(0).max(60).optional(),
+  pickupEnabled: z.boolean().optional(),
+  pickupLabel: z.string().min(3).max(60).optional(),
+  pickupInstructions: z.string().max(500).nullable().optional(),
+})
+
+integrationsRouter.put(
+  '/admin/entrega',
+  requireAuth,
+  asyncRoute(async (req, res) => {
+    const data = parse(entregaSchema, req.body)
+
+    // A cidade atendida vem do CEP de origem. Sem ele, não há como saber quem
+    // é "local" — as opções ficariam invisíveis e a lojista acharia que salvou
+    // e não funcionou.
+    const cidade = await cidadeAtendida()
+    if ((data.localEnabled || data.pickupEnabled) && !cidade) {
+      throw badRequest(
+        'Preencha o CEP de origem antes de ativar a entrega local — é ele que define a cidade atendida.'
+      )
+    }
+
+    // Guardamos a cidade resolvida só para exibição no painel e no histórico.
+    const cfg = await saveDeliverySettings({
+      ...data,
+      ...(cidade ? { localCity: cidade.city, localState: cidade.state } : {}),
+    })
+    limparCacheCidade()
+    res.json({ ...cfg, localPrice: Number(cfg.localPrice), cidadeAtendida: cidade })
   })
 )

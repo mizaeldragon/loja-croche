@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ClipboardList, Mail, MapPin, Phone, Search, Trash2, Truck } from 'lucide-react'
+import { ClipboardList, Home, Mail, MapPin, Phone, Search, Trash2, Truck } from 'lucide-react'
 import usePageHeader from '../../lib/usePageHeader'
 import { useCatalogStore } from '../../store/useCatalogStore'
 import { formatCurrency, formatDate } from '../../lib/format'
@@ -28,6 +28,7 @@ const formatCep = (zip = '') => zip.replace(/^(\d{5})(\d{3})$/, '$1-$2')
 function OrderCard({ order, onStatusChange, onTrackingSave }) {
   const [tracking, setTracking] = useState(order.trackingCode ?? '')
   const a = order.address
+  const ehRetirada = order.shippingType === 'retirada'
 
   return (
     <div className="card-surface space-y-4 p-5">
@@ -91,7 +92,17 @@ function OrderCard({ order, onStatusChange, onTrackingSave }) {
         ))}
       </ul>
 
-      {a && (
+      {ehRetirada && (
+        <p className="flex items-start gap-1.5 rounded-xl bg-amber-50 px-3 py-2.5 text-xs text-amber-900">
+          <Home size={13} className="mt-0.5 shrink-0" />
+          <span>
+            <strong>Não postar.</strong> O cliente vai retirar — combine o local e o horário com
+            ele.
+          </span>
+        </p>
+      )}
+
+      {a && !ehRetirada && (
         <p className="flex items-start gap-1.5 border-t border-espresso-700/8 pt-3 text-xs text-espresso-500">
           <MapPin size={13} className="mt-0.5 shrink-0" />
           <span>
@@ -105,7 +116,8 @@ function OrderCard({ order, onStatusChange, onTrackingSave }) {
       <div className="flex flex-wrap items-center gap-3 border-t border-espresso-700/8 pt-3">
         {order.shippingCarrier && (
           <span className="flex items-center gap-1.5 text-xs text-espresso-500">
-            <Truck size={13} /> {order.shippingCarrier}
+            {order.shippingType === 'transportadora' ? <Truck size={13} /> : <Home size={13} />}{' '}
+            {order.shippingCarrier}
             {order.shippingDays ? ` · ${order.shippingDays} dias` : ''}
           </span>
         )}
@@ -123,6 +135,8 @@ function OrderCard({ order, onStatusChange, onTrackingSave }) {
           ))}
         </select>
 
+        {/* Rastreio só existe quando quem leva é transportadora. */}
+        {order.shippingType === 'transportadora' && (
         <div className="flex items-center gap-2">
           <input
             value={tracking}
@@ -140,6 +154,7 @@ function OrderCard({ order, onStatusChange, onTrackingSave }) {
             Salvar
           </button>
         </div>
+        )}
       </div>
     </div>
   )

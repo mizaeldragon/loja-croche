@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   CheckCircle2,
   CreditCard,
+  Home,
   ExternalLink,
   Loader2,
   Save,
@@ -39,6 +40,8 @@ export default function Integrations() {
   )
 
   const [status, setStatus] = useState(null)
+  const [entrega, setEntrega] = useState(null)
+  const [salvandoEntrega, setSalvandoEntrega] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [testing, setTesting] = useState(null)
@@ -55,6 +58,13 @@ export default function Integrations() {
   })
 
   const set = (key, value) => setForm((f) => ({ ...f, [key]: value }))
+
+  useEffect(() => {
+    api
+      .entrega()
+      .then(setEntrega)
+      .catch(() => setEntrega(null))
+  }, [])
 
   useEffect(() => {
     api
@@ -120,6 +130,30 @@ export default function Integrations() {
     }
   }
 
+  const setE = (k, v) => setEntrega((e) => ({ ...e, [k]: v }))
+
+  async function salvarEntrega(e) {
+    e.preventDefault()
+    setSalvandoEntrega(true)
+    try {
+      const novo = await api.salvarEntrega({
+        localEnabled: entrega.localEnabled,
+        localLabel: entrega.localLabel,
+        localPrice: Number(entrega.localPrice) || 0,
+        localDays: Number(entrega.localDays) || 0,
+        pickupEnabled: entrega.pickupEnabled,
+        pickupLabel: entrega.pickupLabel,
+        pickupInstructions: entrega.pickupInstructions || null,
+      })
+      setEntrega(novo)
+      notifySuccess('Entrega local salva.')
+    } catch (err) {
+      notifyError(err.message)
+    } finally {
+      setSalvandoEntrega(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center py-20">
@@ -129,7 +163,8 @@ export default function Integrations() {
   }
 
   return (
-    <form onSubmit={save} className="max-w-3xl space-y-6">
+    <div className="max-w-3xl space-y-6">
+      <form onSubmit={save} className="space-y-6">
       {/* ------------------------------------------------ Mercado Pago */}
       <section className="card-surface space-y-5 p-6">
         <header className="flex items-start justify-between gap-4">
@@ -316,11 +351,129 @@ export default function Integrations() {
         <TestResult result={tests.frete} />
       </section>
 
-      <div className="sticky bottom-4">
         <button type="submit" disabled={saving} className="btn-primary btn-md w-full disabled:opacity-60">
           <Save size={16} /> {saving ? 'Salvando...' : 'Salvar integrações'}
         </button>
-      </div>
-    </form>
+      </form>
+
+      {/* ------------------------------------------------- entrega local */}
+      {entrega && (
+        <form onSubmit={salvarEntrega} className="card-surface space-y-5 p-6">
+          <header className="flex items-start gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-espresso-700/8 text-espresso-700">
+              <Home size={18} />
+            </span>
+            <div>
+              <h3 className="font-display text-lg text-espresso-800">Entrega na sua cidade</h3>
+              <p className="text-sm text-espresso-500">
+                Para quem mora perto, transportadora sai cara e lenta. Estas opções aparecem só
+                para compradores da sua cidade.
+              </p>
+            </div>
+          </header>
+
+          {entrega.cidadeAtendida ? (
+            <p className="rounded-xl bg-sand-50 px-3.5 py-2.5 text-sm text-espresso-600">
+              Cidade atendida:{' '}
+              <strong className="text-espresso-800">
+                {entrega.cidadeAtendida.city}/{entrega.cidadeAtendida.state}
+              </strong>{' '}
+              — vem do seu CEP de origem, acima. Mudou de endereço? Troque o CEP e salve.
+            </p>
+          ) : (
+            <p className="rounded-xl bg-amber-50 px-3.5 py-2.5 text-sm text-amber-900">
+              Preencha o <strong>CEP de origem</strong> acima e salve as integrações. É ele que
+              define qual cidade recebe estas opções.
+            </p>
+          )}
+
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={entrega.pickupEnabled}
+              onChange={(e) => setE('pickupEnabled', e.target.checked)}
+              className="mt-1 h-4 w-4 accent-terracotta-500"
+            />
+            <span>
+              <span className="block text-sm font-medium text-espresso-800">
+                Permitir retirada
+              </span>
+              <span className="block text-xs text-espresso-500">
+                Frete grátis. O cliente combina com você onde e quando buscar.
+              </span>
+            </span>
+          </label>
+
+          {entrega.pickupEnabled && (
+            <div className="ml-7 space-y-4">
+              <TextField
+                label="Como aparece no site"
+                value={entrega.pickupLabel}
+                onChange={(e) => setE('pickupLabel', e.target.value)}
+              />
+              <TextField
+                label="O que o cliente lê depois de comprar"
+                value={entrega.pickupInstructions ?? ''}
+                onChange={(e) => setE('pickupInstructions', e.target.value)}
+                hint="Ex: Combinamos o ponto e o horário pelo WhatsApp."
+              />
+            </div>
+          )}
+
+          <label className="flex cursor-pointer items-start gap-3 border-t border-espresso-700/8 pt-5">
+            <input
+              type="checkbox"
+              checked={entrega.localEnabled}
+              onChange={(e) => setE('localEnabled', e.target.checked)}
+              className="mt-1 h-4 w-4 accent-terracotta-500"
+            />
+            <span>
+              <span className="block text-sm font-medium text-espresso-800">
+                Entregar na cidade
+              </span>
+              <span className="block text-xs text-espresso-500">
+                Você leva ou manda por motoboy, com valor e prazo definidos por você.
+              </span>
+            </span>
+          </label>
+
+          {entrega.localEnabled && (
+            <div className="ml-7 space-y-4">
+              <TextField
+                label="Como aparece no site"
+                value={entrega.localLabel}
+                onChange={(e) => setE('localLabel', e.target.value)}
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <TextField
+                  label="Valor (R$)"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={entrega.localPrice}
+                  onChange={(e) => setE('localPrice', e.target.value)}
+                  hint="Zero = frete grátis na cidade."
+                />
+                <TextField
+                  label="Prazo (dias úteis)"
+                  type="number"
+                  min="0"
+                  value={entrega.localDays}
+                  onChange={(e) => setE('localDays', e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={salvandoEntrega}
+            className="btn-primary btn-md w-full disabled:opacity-60"
+          >
+            <Save size={16} /> {salvandoEntrega ? 'Salvando...' : 'Salvar entrega local'}
+          </button>
+        </form>
+      )}
+    </div>
   )
 }

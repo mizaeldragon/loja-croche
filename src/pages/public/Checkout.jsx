@@ -52,6 +52,10 @@ export default function Checkout() {
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
   const total = subtotal + (shipping?.price ?? 0)
 
+  // Retirada não tem entrega: pedir endereço aqui seria atrito à toa, e o
+  // backend também não exige nesse caso.
+  const ehRetirada = shipping?.tipo === 'retirada'
+
   // Sem itens ou sem frete escolhido não há o que finalizar.
   useEffect(() => {
     if (!items.length || !shipping) navigate('/carrinho', { replace: true })
@@ -98,15 +102,17 @@ export default function Checkout() {
           phone: form.phone.trim(),
           document: form.document.replace(/\D/g, ''),
         },
-        address: {
-          zip,
-          street: form.street.trim(),
-          number: form.number.trim(),
-          complement: form.complement.trim() || undefined,
-          district: form.district.trim(),
-          city: form.city.trim(),
-          state: form.state.toUpperCase(),
-        },
+        address: ehRetirada
+          ? { zip }
+          : {
+              zip,
+              street: form.street.trim(),
+              number: form.number.trim(),
+              complement: form.complement.trim() || undefined,
+              district: form.district.trim(),
+              city: form.city.trim(),
+              state: form.state.toUpperCase(),
+            },
         shippingOptionId: shipping.id,
       })
 
@@ -163,6 +169,15 @@ export default function Checkout() {
               </div>
             </section>
 
+            {ehRetirada ? (
+              <section className="rounded-2xl border border-espresso-700/10 bg-sand-50 p-5">
+                <h2 className="font-display text-xl text-espresso-800">{shipping.carrier}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-espresso-600">
+                  Não precisamos do seu endereço. Assim que o pagamento for confirmado, entramos
+                  em contato para combinar o local e o horário da retirada.
+                </p>
+              </section>
+            ) : (
             <section>
               <h2 className="mb-4 font-display text-xl text-espresso-800">Endereço de entrega</h2>
               <p className="mb-4 text-sm text-espresso-500">
@@ -198,6 +213,7 @@ export default function Checkout() {
                 </div>
               </div>
             </section>
+            )}
           </div>
 
           <div className="lg:sticky lg:top-24 lg:self-start">

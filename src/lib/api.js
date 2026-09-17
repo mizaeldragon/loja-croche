@@ -118,6 +118,9 @@ export const api = {
     request(`/api/admin/usuarios/${id}`, { method: 'PUT', body: data, auth: true }),
   excluirUsuario: (id) => request(`/api/admin/usuarios/${id}`, { method: 'DELETE', auth: true }),
 
+  entrega: () => request('/api/admin/entrega', { auth: true }),
+  salvarEntrega: (data) => request('/api/admin/entrega', { method: 'PUT', body: data, auth: true }),
+
   integracoes: () => request('/api/admin/integracoes', { auth: true }),
   salvarIntegracoes: (data) =>
     request('/api/admin/integracoes', { method: 'PUT', body: data, auth: true }),

@@ -120,6 +120,9 @@ model Order {
   total        Decimal @db.Decimal(10, 2)
 
   // Snapshot da opção de frete escolhida no checkout.
+  // transportadora | local | retirada — o painel precisa distinguir, senão a
+  // lojista tenta postar um pedido que o cliente vai buscar.
+  shippingType     String  @default("transportadora")
   shippingService  String?
   shippingCarrier  String?
   shippingDays     Int?
@@ -288,6 +291,33 @@ model Integration {
   meMode         String  @default("sandbox") // sandbox | production
   meContactEmail String?
   shipFromZip    String?
+
+  updatedAt DateTime @updatedAt
+}
+
+// Política de entrega da loja — não é credencial, é decisão de negócio dela.
+//
+// Entrega local existe porque transportadora para a mesma cidade é cara e
+// lenta: um produto de R$ 20 sai por R$ 12,43 de frete em 3 dias, sendo que
+// ela entrega em mãos no mesmo dia. Sem isso, o cliente da cidade abandona o
+// carrinho e fecha pelo WhatsApp — e a venda some do sistema.
+model DeliverySettings {
+  id String @id @default("default")
+
+  // Cidade atendida. A comparação é feita resolvendo o CEP do comprador pelo
+  // ViaCEP; é mais amigável do que pedir para ela decorar faixas de CEP.
+  localCity  String?
+  localState String? // UF
+
+  localEnabled Boolean @default(false)
+  localLabel   String  @default("Entrega local")
+  localPrice   Decimal @default(0) @db.Decimal(10, 2)
+  localDays    Int     @default(2)
+
+  pickupEnabled      Boolean @default(false)
+  pickupLabel        String  @default("Retirada combinada")
+  // Mostrado ao cliente depois da compra (onde e como retirar).
+  pickupInstructions String?
 
   updatedAt DateTime @updatedAt
 }
