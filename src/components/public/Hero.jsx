@@ -10,7 +10,11 @@ export default function Hero() {
   const reduce = useReducedMotion()
 
   return (
-    <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_#FDD7CA_0%,_#FFF7F3_55%)]">
+    // A margem negativa sobe a seção para trás do header (que é sticky e
+    // transparente no topo) e o padding devolve o espaço do conteúdo. Sem
+    // isso o degradê começava só abaixo do menu, e sobrava uma faixa chapada
+    // de #FDD7CA no topo, com emenda visível.
+    <section className="relative -mt-[4.75rem] overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_#FDD7CA_0%,_#FFF7F3_55%)] pt-[4.75rem]">
       <div className="pointer-events-none absolute inset-0 bg-grain" />
       <div className="container-page relative grid grid-cols-1 items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1fr_1.15fr] lg:items-stretch lg:gap-10 lg:py-24">
         <motion.div
