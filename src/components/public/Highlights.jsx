@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Package } from 'lucide-react'
 import { useCatalogStore } from '../../store/useCatalogStore'
 import ProductCard from './ProductCard'
-import { useParcelas } from '../../lib/useParcelas'
 import SectionHeading from './SectionHeading'
 import EmptyState from '../ui/EmptyState'
 import { Reveal, Stagger } from '../motion/Reveal'
@@ -10,9 +9,6 @@ import { Reveal, Stagger } from '../motion/Reveal'
 export default function Highlights() {
   const products = useCatalogStore((s) => s.products)
   const featured = products.filter((p) => p.status === 'published' && p.featured).slice(0, 8)
-
-  const precoDe = (p) => (p.promoPrice && p.promoPrice < p.price ? p.promoPrice : p.price)
-  const parcelas = useParcelas(featured.map(precoDe))
 
   return (
     <section className="bg-white py-20 sm:py-24" id="destaques">
@@ -31,7 +27,7 @@ export default function Highlights() {
         ) : (
           <Stagger className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
             {featured.map((p) => (
-              <ProductCard key={p.id} product={p} parcelas={parcelas(precoDe(p))} />
+              <ProductCard key={p.id} product={p} />
             ))}
           </Stagger>
         )}

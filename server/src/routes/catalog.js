@@ -109,11 +109,6 @@ const productSchema = z.object({
   isNew: z.boolean().default(false),
   stock: z.number().int().min(0).default(0),
   order: z.number().int().default(0),
-  // Sem estes campos o frete não é calculável — por isso são obrigatórios aqui.
-  weightGrams: z.number().int().min(1, 'Informe o peso em gramas').max(30000),
-  heightCm: z.number().int().min(1).max(100),
-  widthCm: z.number().int().min(1).max(100),
-  lengthCm: z.number().int().min(1).max(100),
   seoTitle: z.string().max(160).nullable().optional(),
   seoDescription: z.string().max(320).nullable().optional(),
 })

@@ -11,21 +11,12 @@ export default function Dashboard() {
 
   const products = useCatalogStore((s) => s.products)
   const categories = useCatalogStore((s) => s.categories)
-  const orders = useCatalogStore((s) => s.orders)
   const quotes = useCatalogStore((s) => s.quotes)
 
   const published = products.filter((p) => p.status === 'published')
-  const pagos = orders.filter((o) => o.paymentStatus === 'pago')
-  // Vendido != recebido. A taxa do Mercado Pago sai do meio, e no
-  // parcelamento com juros por conta da loja a diferença é grande.
-  const vendido = pagos.reduce((sum, o) => sum + o.total, 0)
-  const recebido = pagos.reduce((sum, o) => sum + (o.netReceived ?? 0), 0)
-  // Pedidos antigos podem não ter o líquido registrado; nesse caso não
-  // fingimos saber e mostramos apenas o vendido.
-  const temLiquido = pagos.some((o) => o.netReceived != null)
   const featured = products.filter((p) => p.featured)
   const lowStock = products.filter((p) => p.stock <= 3 && p.status === 'published')
-  const recentOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5)
+  const recentQuotes = [...quotes].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5)
   const topProducts = [...products].sort((a, b) => (b.bestseller ? 1 : 0) - (a.bestseller ? 1 : 0)).slice(0, 5)
 
   return (
@@ -34,46 +25,35 @@ export default function Dashboard() {
         <StatCard icon={Package} label="Total de produtos" value={products.length} trend={`${published.length} publicados`} tone="caramel" />
         <StatCard icon={Sparkles} label="Produtos em destaque" value={featured.length} trend="Vitrine da home" />
         <StatCard icon={Tags} label="Categorias cadastradas" value={categories.length} />
-        <StatCard
-          icon={ClipboardList}
-          label="Pedidos"
-          value={orders.length}
-          trend={
-            temLiquido
-              ? `${formatCurrency(recebido)} líquidos de ${formatCurrency(vendido)} vendidos`
-              : `${formatCurrency(vendido)} vendidos · ${quotes.length} orçamentos`
-          }
-        />
+        <StatCard icon={ClipboardList} label="Orçamentos" value={quotes.length} trend={`${quotes.filter((q) => q.status === 'novo').length} novos`} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="rounded-3xl bg-white/80 p-0 shadow-card backdrop-blur-sm lg:col-span-2">
           <div className="flex items-center justify-between p-6 pb-2">
             <div>
-              <h3 className="font-display text-lg text-espresso-800">Pedidos recentes</h3>
+              <h3 className="font-display text-lg text-espresso-800">Orçamentos recentes</h3>
               <p className="text-xs text-espresso-400">Últimas solicitações recebidas</p>
             </div>
-            <Link to="/admin/pedidos" className="btn-ghost btn-sm">
+            <Link to="/admin/orcamentos" className="btn-ghost btn-sm">
               Ver todos <ArrowRight size={14} />
             </Link>
           </div>
           <div className="space-y-1 px-3 pb-3">
-            {recentOrders.length === 0 && (
-              <p className="p-3 text-sm text-espresso-400">Nenhum pedido registrado ainda.</p>
+            {recentQuotes.length === 0 && (
+              <p className="p-3 text-sm text-espresso-400">Nenhum orçamento recebido ainda.</p>
             )}
-            {recentOrders.map((o) => (
-              <div key={o.id} className="flex items-center justify-between gap-4 rounded-2xl px-3 py-3 hover:bg-sand-50/60">
+            {recentQuotes.map((q) => (
+              <div key={q.id} className="flex items-center justify-between gap-4 rounded-2xl px-3 py-3 hover:bg-sand-50/60">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-espresso-800">
-                    #{o.number} · {o.customer?.name}
-                  </p>
+                  <p className="truncate text-sm font-semibold text-espresso-800">{q.name}</p>
                   <p className="truncate text-xs text-espresso-400">
-                    {o.items?.map((i) => `${i.quantity}× ${i.productName}`).join(', ')}
+                    {q.message || 'Sem detalhes informados'}
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
-                  <span className="text-xs text-espresso-400">{formatDate(o.createdAt)}</span>
-                  <StatusBadge status={o.status} />
+                  <span className="text-xs text-espresso-400">{formatDate(q.createdAt)}</span>
+                  <StatusBadge status={q.status} />
                 </div>
               </div>
             ))}

@@ -16,20 +16,6 @@ import {
 
 const prisma = new PrismaClient()
 
-// O seed do front não tem peso/dimensões (o projeto não tinha frete).
-// Estes valores são um chute conservador por categoria, para o cálculo
-// funcionar de cara — a cliente ajusta peça a peça no painel depois.
-const DIMENSOES_PADRAO = {
-  roupas: { weightGrams: 400, heightCm: 6, widthCm: 25, lengthCm: 30 },
-  acessorios: { weightGrams: 300, heightCm: 8, widthCm: 20, lengthCm: 25 },
-  decoracao: { weightGrams: 200, heightCm: 5, widthCm: 16, lengthCm: 20 },
-  enxovais: { weightGrams: 800, heightCm: 12, widthCm: 28, lengthCm: 35 },
-  personalizados: { weightGrams: 400, heightCm: 8, widthCm: 20, lengthCm: 25 },
-  presentes: { weightGrams: 150, heightCm: 4, widthCm: 12, lengthCm: 17 },
-}
-
-const PADRAO = { weightGrams: 300, heightCm: 5, widthCm: 16, lengthCm: 20 }
-
 async function main() {
   console.log('Semeando banco...')
 
@@ -55,7 +41,6 @@ async function main() {
 
   // ---- produtos ----
   for (const p of seedProducts) {
-    const dims = DIMENSOES_PADRAO[p.category] ?? PADRAO
     const data = {
       name: p.name,
       description: p.description ?? '',
@@ -74,13 +59,11 @@ async function main() {
       order: p.order ?? 0,
       seoTitle: p.seoTitle ?? null,
       seoDescription: p.seoDescription ?? null,
-      ...dims,
     }
 
     await prisma.product.upsert({
       where: { slug: p.slug },
-      // Não sobrescreve peso/dimensões já ajustados pela cliente no painel.
-      update: { ...data, ...(await manterDimensoes(p.slug, dims)) },
+      update: data,
       create: { ...data, slug: p.slug },
     })
   }
@@ -141,16 +124,6 @@ async function main() {
   }
 
   console.log('Pronto.')
-}
-
-// Se o produto já existe e teve peso/dimensões editados, preserva o que está no banco.
-async function manterDimensoes(slug, padrao) {
-  const atual = await prisma.product.findUnique({
-    where: { slug },
-    select: { weightGrams: true, heightCm: true, widthCm: true, lengthCm: true },
-  })
-  if (!atual) return padrao
-  return atual
 }
 
 main()

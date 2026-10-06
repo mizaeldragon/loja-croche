@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom'
 import { Search, SlidersHorizontal, PackageSearch, X } from 'lucide-react'
 import { useCatalogStore } from '../../store/useCatalogStore'
 import ProductCard from '../../components/public/ProductCard'
-import { useParcelas } from '../../lib/useParcelas'
 import EmptyState from '../../components/ui/EmptyState'
 import { ProductCardSkeleton } from '../../components/ui/Skeleton'
 import Pagination from '../../components/ui/Pagination'
@@ -54,10 +53,6 @@ export default function Shop() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
-
-  // Uma chamada só para todos os preços da página, em vez de uma por card.
-  const precoDe = (p) => (p.promoPrice && p.promoPrice < p.price ? p.promoPrice : p.price)
-  const parcelas = useParcelas(paged.map(precoDe))
 
   const setCategory = (slug) => {
     if (slug) setSearchParams({ categoria: slug })
@@ -153,7 +148,7 @@ export default function Shop() {
           <>
             <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
               {paged.map((p, i) => (
-                <ProductCard key={p.id} product={p} index={i} parcelas={parcelas(precoDe(p))} />
+                <ProductCard key={p.id} product={p} index={i} />
               ))}
             </div>
             <Pagination page={page} totalPages={totalPages} onChange={setPage} totalItems={filtered.length} pageSize={PAGE_SIZE} />

@@ -418,53 +418,6 @@ export const seedSettings = {
   ],
 }
 
-export const seedOrders = [
-  {
-    id: 'ord_1',
-    customerName: 'Patrícia Nogueira',
-    contact: '(11) 97777-2233',
-    email: 'patricia.n@email.com',
-    items: 'Porta joía tulipa (Rosa)',
-    total: 28.0,
-    status: 'novo',
-    type: 'pedido',
-    createdAt: new Date(Date.now() - 1 * 86400000).toISOString(),
-  },
-  {
-    id: 'ord_2',
-    customerName: 'Renata Costa',
-    contact: '(21) 96666-1122',
-    email: 'renata.costa@email.com',
-    items: 'Orçamento: Kit higiene bebê 5 peças personalizado',
-    total: null,
-    status: 'em_andamento',
-    type: 'orcamento',
-    createdAt: new Date(Date.now() - 3 * 86400000).toISOString(),
-  },
-  {
-    id: 'ord_3',
-    customerName: 'Ana Beatriz Souza',
-    contact: '(31) 95555-9988',
-    email: 'ana.beatriz@email.com',
-    items: 'Kit higiene bebê 3 peças + ChaveiroDivino',
-    total: 213.0,
-    status: 'concluido',
-    type: 'pedido',
-    createdAt: new Date(Date.now() - 8 * 86400000).toISOString(),
-  },
-  {
-    id: 'ord_4',
-    customerName: 'Larissa Martins',
-    contact: '(41) 94444-7766',
-    email: 'larissa.m@email.com',
-    items: 'Sacola Presente M',
-    total: 64.0,
-    status: 'cancelado',
-    type: 'pedido',
-    createdAt: new Date(Date.now() - 12 * 86400000).toISOString(),
-  },
-]
-
 export const seedUsers = [
   {
     id: 'user_admin',

@@ -28,7 +28,6 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mercadopago": "^2.1.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {

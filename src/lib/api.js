@@ -66,15 +66,6 @@ export const api = {
   categorias: () => request('/api/categorias'),
   conteudo: () => request('/api/conteudo'),
 
-  // --- frete e checkout ---
-  buscarCep: (cep) => request(`/api/cep/${cep.replace(/\D/g, '')}`),
-  // Simulação de parcelamento. Os valores vêm do Mercado Pago, nunca de uma
-  // conta nossa — ver server/src/services/installments.js.
-  parcelas: (valores) => request(`/api/parcelas?valores=${valores.join(',')}`),
-  calcularFrete: (zip, items) => request('/api/frete', { method: 'POST', body: { zip, items } }),
-  criarCheckout: (payload) => request('/api/checkout', { method: 'POST', body: payload }),
-  statusPedido: (id) => request(`/api/pedidos/${id}/status`),
-
   // --- painel ---
   login: (email, password) => request('/api/auth/login', { method: 'POST', body: { email, password } }),
   me: () => request('/api/auth/me', { auth: true }),
@@ -118,17 +109,6 @@ export const api = {
     request(`/api/admin/usuarios/${id}`, { method: 'PUT', body: data, auth: true }),
   excluirUsuario: (id) => request(`/api/admin/usuarios/${id}`, { method: 'DELETE', auth: true }),
 
-  entrega: () => request('/api/admin/entrega', { auth: true }),
-  salvarEntrega: (data) => request('/api/admin/entrega', { method: 'PUT', body: data, auth: true }),
-
-  integracoes: () => request('/api/admin/integracoes', { auth: true }),
-  salvarIntegracoes: (data) =>
-    request('/api/admin/integracoes', { method: 'PUT', body: data, auth: true }),
-  testarPagamento: () =>
-    request('/api/admin/integracoes/testar-pagamento', { method: 'POST', body: {}, auth: true }),
-  testarFrete: () =>
-    request('/api/admin/integracoes/testar-frete', { method: 'POST', body: {}, auth: true }),
-
   adminConteudo: () => request('/api/admin/conteudo', { auth: true }),
   salvarConfiguracoes: (data) =>
     request('/api/admin/configuracoes', { method: 'PUT', body: data, auth: true }),
@@ -139,15 +119,4 @@ export const api = {
   atualizarOrcamento: (id, data) =>
     request(`/api/admin/orcamentos/${id}`, { method: 'PATCH', body: data, auth: true }),
   excluirOrcamento: (id) => request(`/api/admin/orcamentos/${id}`, { method: 'DELETE', auth: true }),
-
-  adminPedidos: (params = {}) => {
-    const qs = new URLSearchParams(
-      Object.entries(params).filter(([, v]) => v !== undefined && v !== '')
-    ).toString()
-    return request(`/api/admin/pedidos${qs ? `?${qs}` : ''}`, { auth: true })
-  },
-  adminPedido: (id) => request(`/api/admin/pedidos/${id}`, { auth: true }),
-  atualizarPedido: (id, data) =>
-    request(`/api/admin/pedidos/${id}`, { method: 'PATCH', body: data, auth: true }),
-  metricas: () => request('/api/admin/metricas', { auth: true }),
 }

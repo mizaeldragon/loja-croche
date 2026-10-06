@@ -7,9 +7,6 @@ import ProtectedRoute from './components/admin/ProtectedRoute'
 import Home from './pages/public/Home'
 import Shop from './pages/public/Shop'
 import ProductDetail from './pages/public/ProductDetail'
-import Cart from './pages/public/Cart'
-import Checkout from './pages/public/Checkout'
-import OrderStatus from './pages/public/OrderStatus'
 import NotFound from './pages/public/NotFound'
 
 import Login from './pages/admin/Login'
@@ -17,11 +14,10 @@ import Dashboard from './pages/admin/Dashboard'
 import Products from './pages/admin/Products'
 import ProductForm from './pages/admin/ProductForm'
 import Categories from './pages/admin/Categories'
-import Orders from './pages/admin/Orders'
+import Quotes from './pages/admin/Quotes'
 import Testimonials from './pages/admin/Testimonials'
 import Banners from './pages/admin/Banners'
 import Settings from './pages/admin/Settings'
-import Integrations from './pages/admin/Integrations'
 import Users from './pages/admin/Users'
 
 export default function App() {
@@ -32,10 +28,6 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/loja" element={<Shop />} />
           <Route path="/produto/:slug" element={<ProductDetail />} />
-          <Route path="/carrinho" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          {/* resultado: sucesso | pendente | falha — enviado nas back_urls do Mercado Pago */}
-          <Route path="/pedido/:resultado" element={<OrderStatus />} />
         </Route>
 
         <Route path="/admin/login" element={<Login />} />
@@ -47,12 +39,11 @@ export default function App() {
             <Route path="/admin/produtos/novo" element={<ProductForm />} />
             <Route path="/admin/produtos/:id/editar" element={<ProductForm />} />
             <Route path="/admin/categorias" element={<Categories />} />
-            <Route path="/admin/pedidos" element={<Orders />} />
+            <Route path="/admin/orcamentos" element={<Quotes />} />
             <Route path="/admin/depoimentos" element={<Testimonials />} />
             <Route path="/admin/banners" element={<Banners />} />
             <Route path="/admin/usuarios" element={<Users />} />
             <Route path="/admin/configuracoes" element={<Settings />} />
-            <Route path="/admin/integracoes" element={<Integrations />} />
           </Route>
         </Route>
 

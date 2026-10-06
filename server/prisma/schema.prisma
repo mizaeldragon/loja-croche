@@ -1,4 +1,4 @@
-// Schema do e-commerce do Ateliê Angel Art.
+// Schema da landing page + painel do Ateliê Angel Art.
 // Banco: Postgres (Railway). Valores monetários em Decimal(10,2) — nunca Float.
 
 generator client {
@@ -36,7 +36,7 @@ model Product {
   slug        String        @unique
   description String        @default("")
   price       Decimal       @db.Decimal(10, 2)
-  // Preço promocional. Quando preenchido e menor que `price`, é o valor cobrado.
+  // Preço promocional. Quando preenchido e menor que `price`, é o valor exibido.
   promoPrice  Decimal?      @db.Decimal(10, 2)
   status      ProductStatus @default(draft)
 
@@ -54,17 +54,8 @@ model Product {
   stock      Int     @default(0)
   order      Int     @default(0)
 
-  // Obrigatórios para o cálculo de frete no Melhor Envio.
-  // Peso em gramas e dimensões em centímetros (a API trabalha nessas unidades).
-  weightGrams Int @default(300)
-  heightCm    Int @default(4)
-  widthCm     Int @default(12)
-  lengthCm    Int @default(17)
-
   seoTitle       String?
   seoDescription String?
-
-  orderItems OrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -73,119 +64,7 @@ model Product {
   @@index([categoryId])
 }
 
-// ---------------------------------------------------------------- pedidos
-
-enum OrderStatus {
-  novo
-  em_andamento
-  enviado
-  concluido
-  cancelado
-}
-
-enum PaymentStatus {
-  pendente
-  pago
-  recusado
-  estornado
-}
-
-model Customer {
-  id       String  @id @default(cuid())
-  name     String
-  email    String
-  phone    String
-  document String? // CPF — exigido pelo Mercado Pago em boleto/PIX
-
-  orders Order[]
-
-  createdAt DateTime @default(now())
-
-  @@index([email])
-}
-
-model Order {
-  id     String @id @default(cuid())
-  number Int    @unique @default(autoincrement())
-
-  customerId String
-  customer   Customer @relation(fields: [customerId], references: [id])
-
-  status        OrderStatus   @default(novo)
-  paymentStatus PaymentStatus @default(pendente)
-
-  subtotal     Decimal @db.Decimal(10, 2)
-  shippingCost Decimal @db.Decimal(10, 2)
-  discount     Decimal @default(0) @db.Decimal(10, 2)
-  total        Decimal @db.Decimal(10, 2)
-
-  // Snapshot da opção de frete escolhida no checkout.
-  // transportadora | local | retirada — o painel precisa distinguir, senão a
-  // lojista tenta postar um pedido que o cliente vai buscar.
-  shippingType     String  @default("transportadora")
-  shippingService  String?
-  shippingCarrier  String?
-  shippingDays     Int?
-  trackingCode     String?
-  melhorEnvioOrder String?
-
-  mpPreferenceId String?
-  mpPaymentId    String?
-  paidAt         DateTime?
-  stockApplied   Boolean   @default(false)
-
-  // Resultado real da cobrança, preenchido pelo webhook a partir da API do
-  // Mercado Pago. `total` é o que o pedido valia; `netReceived` é o que de
-  // fato caiu na conta depois da taxa. Sem isso o painel mostraria receita
-  // que não existe — no parcelamento com juros do lojista a diferença é real.
-  installments Int?
-  netReceived  Decimal? @db.Decimal(10, 2)
-  mpFee        Decimal? @db.Decimal(10, 2)
-
-  notes String?
-
-  items   OrderItem[]
-  address ShippingAddress?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([paymentStatus, createdAt])
-  @@index([mpPreferenceId])
-}
-
-// Snapshot do item no momento da compra — nome e preço ficam congelados,
-// para o histórico não mudar quando o produto for editado depois.
-model OrderItem {
-  id      String @id @default(cuid())
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  productId String?
-  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
-
-  productName String
-  unitPrice   Decimal @db.Decimal(10, 2)
-  quantity    Int
-  color       String?
-  size        String?
-
-  @@index([orderId])
-}
-
-model ShippingAddress {
-  id      String @id @default(cuid())
-  orderId String @unique
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  zip        String // CEP, somente dígitos
-  street     String
-  number     String
-  complement String?
-  district   String
-  city       String
-  state      String // UF
-}
+// ---------------------------------------------------------------- orçamentos
 
 enum QuoteStatus {
   novo
@@ -194,9 +73,8 @@ enum QuoteStatus {
   fechado
 }
 
-// Pedido de orçamento vindo do formulário da landing page. É outra coisa que
-// um pedido pago: não tem itens, frete nem pagamento — só um contato e o que
-// a pessoa quer. Por isso mora em tabela própria.
+// Pedido de orçamento vindo do formulário da landing page: só um contato e o
+// que a pessoa quer.
 model Quote {
   id      String      @id @default(cuid())
   number  Int         @unique @default(autoincrement())
@@ -269,69 +147,4 @@ model Settings {
   banners Json   @default("{}")
 
   updatedAt DateTime @updatedAt
-}
-
-// Credenciais das integrações da LOJA (não da infraestrutura).
-//
-// Ficam no banco, e não no .env, porque quem é dono delas é a lojista: ela
-// precisa poder trocar um token sem depender de quem instalou o sistema e sem
-// um redeploy. Os campos marcados como criptografados guardam AES-256-GCM
-// (ver src/lib/crypto.js) — nunca texto puro, nunca voltam para o navegador.
-model Integration {
-  id String @id @default("default")
-
-  // ---- Mercado Pago ----
-  // Um campo só, de propósito. O Access Token de produção basta: o Checkout
-  // Pro já entrega PIX, débito, crédito e boleto, e a chave de assinatura do
-  // webhook seria redundante (ver src/routes/webhooks.js).
-  mpAccessToken String? // criptografado
-
-  // ---- Melhor Envio ----
-  meToken        String? // criptografado
-  meMode         String  @default("sandbox") // sandbox | production
-  meContactEmail String?
-  shipFromZip    String?
-
-  updatedAt DateTime @updatedAt
-}
-
-// Política de entrega da loja — não é credencial, é decisão de negócio dela.
-//
-// Entrega local existe porque transportadora para a mesma cidade é cara e
-// lenta: um produto de R$ 20 sai por R$ 12,43 de frete em 3 dias, sendo que
-// ela entrega em mãos no mesmo dia. Sem isso, o cliente da cidade abandona o
-// carrinho e fecha pelo WhatsApp — e a venda some do sistema.
-model DeliverySettings {
-  id String @id @default("default")
-
-  // Cidade atendida. A comparação é feita resolvendo o CEP do comprador pelo
-  // ViaCEP; é mais amigável do que pedir para ela decorar faixas de CEP.
-  localCity  String?
-  localState String? // UF
-
-  localEnabled Boolean @default(false)
-  localLabel   String  @default("Entrega local")
-  localPrice   Decimal @default(0) @db.Decimal(10, 2)
-  localDays    Int     @default(2)
-
-  pickupEnabled      Boolean @default(false)
-  pickupLabel        String  @default("Retirada combinada")
-  // Mostrado ao cliente depois da compra (onde e como retirar).
-  pickupInstructions String?
-
-  updatedAt DateTime @updatedAt
-}
-
-// ---------------------------------------------------------------- infra
-
-// Garante idempotência dos webhooks: o Mercado Pago reenvia a mesma
-// notificação várias vezes e não podemos processar o pagamento duas vezes.
-model WebhookEvent {
-  id         String   @id @default(cuid())
-  provider   String
-  externalId String
-  payload    Json
-  receivedAt DateTime @default(now())
-
-  @@unique([provider, externalId])
 }

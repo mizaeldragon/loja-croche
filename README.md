@@ -45,21 +45,17 @@ src/
     ui/         → componentes de interface reutilizáveis (botões, modais, tabelas, toasts, etc.)
   pages/
     public/     → Home, Loja (catálogo com filtros e busca), Detalhe do Produto, 404
-    admin/      → Login, Dashboard, Produtos, Categorias, Pedidos, Depoimentos, Banners, Configurações, Usuários
+    admin/      → Login, Dashboard, Produtos, Categorias, Orçamentos, Depoimentos, Banners, Configurações, Usuários
   layouts/      → PublicLayout e AdminLayout
-  store/        → estado global com Zustand (persistido em localStorage)
+  store/        → estado global com Zustand (cache do que vem da API)
   lib/          → helpers (formatação, slugify, seed de dados iniciais)
 ```
 
 ## Persistência de dados
 
-Todo o conteúdo (produtos, categorias, depoimentos, FAQ, banners, textos, pedidos, orçamentos e usuários) vive no
+Todo o conteúdo (produtos, categorias, depoimentos, FAQ, banners, textos, orçamentos e usuários) vive no
 **Postgres**, acessado pela API em [`server/`](server/README.md). Os stores em `src/store/` são apenas cache de UI:
 carregam via `load()` / `loadAdmin()` e cada ação de escrita faz a chamada HTTP correspondente.
-
-O único dado que continua no navegador é o **carrinho** (`useCartStore`), persistido em localStorage de propósito —
-para o cliente não perder os itens ao fechar a aba. Mesmo assim, preço, estoque e frete são sempre recalculados no
-servidor no momento do checkout.
 
 `src/lib/seed.js` continua no repositório com dois papéis: alimentar o banco na primeira carga
 (`npm run seed` no servidor) e servir de forma inicial do estado, para os componentes não quebrarem no primeiro
@@ -74,9 +70,9 @@ render antes da API responder.
 - Página de produto com galeria, seleção de cor/tamanho e botão direto para WhatsApp.
 
 **Painel administrativo**
-- Dashboard com métricas do catálogo e pedidos recentes.
+- Dashboard com métricas do catálogo e orçamentos recentes.
 - CRUD completo de produtos (imagens, variações, SEO, destaque, estoque, status).
-- Gestão de categorias, depoimentos, usuários e pedidos/orçamentos.
+- Gestão de categorias, depoimentos, usuários e orçamentos.
 - Editor de conteúdo da landing page (banner principal, banner promocional, sobre, benefícios, FAQ e CTA final)
   sem necessidade de mexer em código.
 - Estados vazios, loading skeletons, modais de confirmação e notificações (toasts) em toda a interface.

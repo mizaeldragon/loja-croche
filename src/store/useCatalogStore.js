@@ -27,7 +27,6 @@ const initialShape = {
   faqs: seedFaqs,
   banners: seedBanners,
   settings: seedSettings,
-  orders: [],
   quotes: [],
 }
 
@@ -94,18 +93,17 @@ export const useCatalogStore = create((set, get) => {
       }
     },
 
-    /** Painel: inclui rascunhos, pedidos e orçamentos — exige sessão. */
+    /** Painel: inclui rascunhos e orçamentos — exige sessão. */
     loadAdmin: async () => {
       set({ loading: true, error: null })
       try {
-        const [products, categories, conteudo, faqs, testimonials, orders, quotes] =
+        const [products, categories, conteudo, faqs, testimonials, quotes] =
           await Promise.all([
             api.adminProdutos(),
             api.adminCategorias(),
             api.adminConteudo(),
             api.adminFaqs(),
             api.adminDepoimentos(),
-            api.adminPedidos(),
             api.adminOrcamentos(),
           ])
         set({
@@ -115,7 +113,6 @@ export const useCatalogStore = create((set, get) => {
           banners: conteudo.banners,
           faqs,
           testimonials,
-          orders,
           quotes,
           loading: false,
           loaded: true,
@@ -245,18 +242,6 @@ export const useCatalogStore = create((set, get) => {
 
     updateSettings: withErrorToast(async (data) => {
       set({ settings: await api.salvarConfiguracoes(data) })
-    }),
-
-    // ---------- PEDIDOS ----------
-
-    updateOrderStatus: withErrorToast(async (id, status) => {
-      const order = await api.atualizarPedido(id, { status })
-      set((s) => ({ orders: s.orders.map((o) => (o.id === id ? order : o)) }))
-    }),
-
-    updateOrderTracking: withErrorToast(async (id, trackingCode) => {
-      const order = await api.atualizarPedido(id, { trackingCode })
-      set((s) => ({ orders: s.orders.map((o) => (o.id === id ? order : o)) }))
     }),
 
     // ---------- ORÇAMENTOS ----------

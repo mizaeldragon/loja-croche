@@ -20,11 +20,6 @@ const emptyProduct = {
   tags: [],
   status: 'draft',
   stock: 0,
-  // Usados pelo cálculo de frete — peso em gramas, medidas em centímetros.
-  weightGrams: 300,
-  heightCm: 5,
-  widthCm: 16,
-  lengthCm: 20,
   images: [],
   featured: false,
   bestseller: false,
@@ -48,8 +43,7 @@ export default function ProductForm() {
   const deleteProduct = useCatalogStore((s) => s.deleteProduct)
 
   const existing = isEditing ? products.find((p) => p.id === id) : null
-  // Produtos cadastrados antes dos campos de envio existirem não têm peso nem
-  // dimensões: o merge garante um padrão em vez de travar a validação.
+  // O merge garante um padrão para campos que o produto salvo não tenha.
   const [form, setForm] = useState(existing ? { ...emptyProduct, ...existing } : emptyProduct)
   const [slugTouched, setSlugTouched] = useState(isEditing)
   const [errors, setErrors] = useState({})
@@ -74,18 +68,6 @@ export default function ProductForm() {
     if (form.promoPrice && Number(form.promoPrice) >= Number(form.price)) {
       errs.promoPrice = 'O preço promocional deve ser menor que o preço normal.'
     }
-    // Sem peso/dimensões válidos o frete não é calculável e o produto
-    // não pode ser vendido pelo site.
-    for (const [campo, label] of [
-      ['weightGrams', 'peso'],
-      ['heightCm', 'altura'],
-      ['widthCm', 'largura'],
-      ['lengthCm', 'comprimento'],
-    ]) {
-      if (!form[campo] || Number(form[campo]) <= 0) {
-        errs[campo] = `Informe o ${label}.`
-      }
-    }
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -104,10 +86,6 @@ export default function ProductForm() {
       promoPrice: form.promoPrice ? Number(form.promoPrice) : null,
       stock: Number(form.stock) || 0,
       order: Number(form.order) || 1,
-      weightGrams: Number(form.weightGrams),
-      heightCm: Number(form.heightCm),
-      widthCm: Number(form.widthCm),
-      lengthCm: Number(form.lengthCm),
       status: finalStatus,
       seoTitle: form.seoTitle || form.name,
       seoDescription: form.seoDescription || form.description?.slice(0, 150),
@@ -208,52 +186,6 @@ export default function ProductForm() {
                 hint="Deixe em branco se não houver promoção"
               />
             </div>
-          </div>
-
-          <div className="card-surface space-y-5 p-6">
-            <h3 className="font-display text-lg text-espresso-800">Envio</h3>
-            <p className="-mt-3 text-sm text-espresso-500">
-              Meça a peça <strong>já embalada</strong>. É com esses valores que o frete é calculado
-              — se estiverem errados, o valor cobrado do cliente sai errado também.
-            </p>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <TextField
-                label="Peso (g)"
-                type="number"
-                min="1"
-                value={form.weightGrams}
-                onChange={(e) => set('weightGrams', e.target.value)}
-                error={errors.weightGrams}
-              />
-              <TextField
-                label="Altura (cm)"
-                type="number"
-                min="1"
-                value={form.heightCm}
-                onChange={(e) => set('heightCm', e.target.value)}
-                error={errors.heightCm}
-              />
-              <TextField
-                label="Largura (cm)"
-                type="number"
-                min="1"
-                value={form.widthCm}
-                onChange={(e) => set('widthCm', e.target.value)}
-                error={errors.widthCm}
-              />
-              <TextField
-                label="Comprimento (cm)"
-                type="number"
-                min="1"
-                value={form.lengthCm}
-                onChange={(e) => set('lengthCm', e.target.value)}
-                error={errors.lengthCm}
-              />
-            </div>
-            <p className="text-xs text-espresso-400">
-              Mínimos aceitos pelos Correios: 16 × 11 × 2 cm. Valores menores são ajustados
-              automaticamente na cotação.
-            </p>
           </div>
 
           <div className="card-surface space-y-5 p-6">

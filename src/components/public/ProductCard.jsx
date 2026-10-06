@@ -2,13 +2,10 @@ import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Heart } from 'lucide-react'
 import { formatCurrency } from '../../lib/format'
-import Parcelamento from './Parcelamento'
 import { useCatalogStore } from '../../store/useCatalogStore'
 import { staggerItem } from '../../lib/motion'
 
-// `parcelas` vem do pai: a listagem consulta todos os precos numa chamada só
-// e distribui, em vez de cada card disparar a sua.
-export default function ProductCard({ product, parcelas = null }) {
+export default function ProductCard({ product }) {
   const categories = useCatalogStore((s) => s.categories)
   const category = categories.find((c) => c.slug === product.category)
   const hasPromo = product.promoPrice && product.promoPrice < product.price
@@ -72,7 +69,6 @@ export default function ProductCard({ product, parcelas = null }) {
               <span className="font-display text-lg text-espresso-800">{formatCurrency(product.price)}</span>
             )}
           </div>
-          <Parcelamento dados={parcelas} compacto className="mt-1" />
         </div>
       </Link>
     </motion.div>

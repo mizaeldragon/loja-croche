@@ -8,12 +8,7 @@ import { prisma } from './lib/prisma.js'
 import { adminContentRouter } from './routes/adminContent.js'
 import { authRouter } from './routes/auth.js'
 import { catalogRouter } from './routes/catalog.js'
-import { checkoutRouter } from './routes/checkout.js'
-import { integrationsRouter } from './routes/integrations.js'
-import { ordersRouter } from './routes/orders.js'
-import { shippingRouter } from './routes/shipping.js'
-import { webhooksRouter } from './routes/webhooks.js'
-import { getPaymentConfig, getShippingConfig } from './services/integrations.js'
+import { quotesRouter } from './routes/quotes.js'
 
 const app = express()
 
@@ -25,7 +20,7 @@ app.use(helmet())
 app.use(
   cors({
     origin(origin, callback) {
-      // Sem origin = curl / health check / webhook do MP — liberado.
+      // Sem origin = curl / health check — liberado.
       if (!origin || env.corsOrigins.includes(origin)) return callback(null, true)
       callback(new HttpError(403, `Origem não permitida: ${origin}`))
     },
@@ -40,23 +35,13 @@ app.use(
     max: 120,
     standardHeaders: true,
     legacyHeaders: false,
-    // O MP pode enviar rajadas de notificação; não faz sentido limitá-lo.
-    skip: (req) => req.path.startsWith('/webhooks/'),
   })
 )
 
 app.get('/health', async (_req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`
-    const [pagamento, frete] = await Promise.all([getPaymentConfig(), getShippingConfig()])
-    res.json({
-      ok: true,
-      // Sem expor credencial: só se está configurada e em que modo.
-      integracoes: {
-        pagamentos: { configurado: pagamento.configured },
-        frete: { configurado: frete.configured, modo: frete.mode },
-      },
-    })
+    res.json({ ok: true })
   } catch {
     res.status(503).json({ ok: false, db: false })
   }
@@ -65,11 +50,7 @@ app.get('/health', async (_req, res) => {
 app.use('/api', authRouter)
 app.use('/api', catalogRouter)
 app.use('/api', adminContentRouter)
-app.use('/api', shippingRouter)
-app.use('/api', checkoutRouter)
-app.use('/api', ordersRouter)
-app.use('/api', integrationsRouter)
-app.use('/api', webhooksRouter)
+app.use('/api', quotesRouter)
 
 app.use((_req, res) => res.status(404).json({ error: 'Rota não encontrada' }))
 
@@ -93,18 +74,8 @@ app.use((err, _req, res, _next) => {
   })
 })
 
-const server = app.listen(env.PORT, async () => {
+const server = app.listen(env.PORT, () => {
   console.log(`API em http://localhost:${env.PORT}`)
-
-  // As integrações agora vivem no banco, então só dá para saber o estado
-  // depois de subir. Aviso serve para não descobrir na primeira venda.
-  try {
-    const [pagamento, frete] = await Promise.all([getPaymentConfig(), getShippingConfig()])
-    if (!pagamento.configured) console.warn('! Pagamentos não configurados (painel → Integrações)')
-    if (!frete.configured) console.warn('! Frete não configurado (painel → Integrações)')
-  } catch {
-    console.warn('! Não foi possível ler as integrações ainda (banco sem migração?)')
-  }
 })
 
 // Railway envia SIGTERM no redeploy: fecha conexões antes de morrer.
